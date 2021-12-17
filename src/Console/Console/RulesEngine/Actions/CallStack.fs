@@ -1,18 +1,14 @@
 module RulesEngine.Actions.CallStack
 
 open System.IO
-open System.Diagnostics
 
-open Microsoft.Diagnostics.Tracing
-open Microsoft.Diagnostics.Tracing.Analysis
 open Microsoft.Diagnostics.Tracing.Etlx
-open Microsoft.Diagnostics.Tracing.Session
-open Microsoft.Diagnostics.Tracing.Parsers.Clr
 open Microsoft.Diagnostics.Symbols
+
+let symbolReader : SymbolReader = new SymbolReader(TextWriter.Null, SymbolPath.SymbolPathFromEnvironment)
 
 // Helper fn responsible for getting the call stack from a particular trace event.
 let printCallStack (callStack : TraceCallStack) : unit =
-    use symbolReader = new SymbolReader(TextWriter.Null, SymbolPath.SymbolPathFromEnvironment)
 
     let printStackFrame (callStack : TraceCallStack) : unit =
         if not (isNull (callStack.CodeAddress.ModuleFile))

@@ -4,8 +4,7 @@ open System
 
 // A rule consists of a Condition and an Action.
 // If the condition is met, the said action will be invoked.
-// Rule = Condition + Action.
-// For example: "GCEnd.PauseTimeMSec >= 300 : Print Alert"
+// Rule = Condition + Action. For example: "GCEnd.PauseTimeMSec >= 300 : Print Alert"
 
 // Condition: A condition consists of a Conditioner, A Condition Type and a Condition Value.
 
