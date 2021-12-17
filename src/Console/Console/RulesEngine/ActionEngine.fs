@@ -1,11 +1,7 @@
 module RulesEngine.ActionEngine
 
 open Microsoft.Diagnostics.Tracing
-open Microsoft.Diagnostics.Tracing.Analysis
 open Microsoft.Diagnostics.Tracing.Etlx
-open Microsoft.Diagnostics.Tracing.Session
-open Microsoft.Diagnostics.Tracing.Parsers.Clr
-open Microsoft.Diagnostics.Tracing.Analysis.GC
 
 open System
 open System.Linq
@@ -31,8 +27,8 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
 
         // Check if the condition matches.
         let checkConditionValue (rule : Rule) (traceEvent : TraceEvent) : bool =
-            let payload : double   = Double.Parse(traceEvent.PayloadByName(condition.Conditioner.ConditionerProperty).ToString())
-            let conditionalValue   : ConditionalValue = rule.Condition.ConditionalValue
+            let conditionalValue : ConditionalValue = rule.Condition.ConditionalValue
+            let payload          : double = Double.Parse (traceEvent.PayloadByName(condition.Conditioner.ConditionerProperty).ToString())
 
             match conditionalValue with
             | ConditionalValue.Value value ->
@@ -43,6 +39,7 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
                 | ConditionType.LessThan           -> payload < value
                 | ConditionType.LessThanEqualTo    -> payload <= value
                 | ConditionType.NotEqual           -> payload <> value
+                | ConditionType.IsAnomaly          -> false // This case should technically not be reached but adding it to prevent warnings.
             | ConditionalValue.AnomalyDetectionType anomalyDetectionType ->
                 match anomalyDetectionType with
                 | AnomalyDetectionType.DetectIIDSpike ->
@@ -52,6 +49,15 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
         matchEventName rule traceEvent && checkPayload rule traceEvent && checkConditionValue rule traceEvent
 
     let apply (action : Action) : unit = 
+
+        // TODO: Store the Invoked Action Result.
+        let invokedActionContext : InvokedActionContext = 
+            { Timestamp     = traceEvent.TimeStampRelativeMSec 
+              ProcessName   = traceEvent.ProcessName 
+              EventName     = traceEvent.EventName 
+              EventProperty = rule.Condition.Conditioner.ConditionerProperty
+              RuleInvoked   = rule
+              Reason        = Double.Parse(traceEvent.PayloadByName(rule.Condition.Conditioner.ConditionerProperty).ToString()) }
 
         match action.ActionOperator with
         | ActionOperator.Print ->

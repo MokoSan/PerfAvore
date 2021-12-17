@@ -47,3 +47,16 @@ type Rule =
       Condition    : Condition
       Action       : Action 
       OriginalRule : string }
+
+// Invoked Actions: Once an action is invoked, store the context and the result.
+type InvokedActionContext = 
+    { Timestamp     : double
+      ProcessName   : string
+      EventName     : string
+      EventProperty : string
+      RuleInvoked   : Rule
+      Reason        : double }
+
+type InvokedActionResult =
+    { Context : InvokedActionContext; Result  : string }
+type InvokedActionResults = InvokedActionResult seq

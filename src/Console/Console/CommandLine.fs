@@ -4,7 +4,7 @@ open Argu
 
 type Arguments = 
     | TracePath of Path : string
-    | ProcessName of string
+    | [<Mandatory>] ProcessName of string
     | RulesFile of Path : string
 
     interface IArgParserTemplate with
