@@ -13,6 +13,7 @@
     <Compile Include="RulesEngine/Actions/CallStack.fs" />
     <Compile Include="RulesEngine/AnomalyDetection/IIDSpike.fs" />
     <Compile Include="RulesEngine/ActionEngine.fs" />
+    <Compile Include="TraceSession.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

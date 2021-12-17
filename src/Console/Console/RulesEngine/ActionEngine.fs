@@ -6,7 +6,6 @@ open Microsoft.Diagnostics.Tracing.Etlx
 open Microsoft.Diagnostics.Tracing.Session
 open Microsoft.Diagnostics.Tracing.Parsers.Clr
 open Microsoft.Diagnostics.Tracing.Analysis.GC
-open Microsoft.Diagnostics.Symbols
 
 open System
 open System.Linq
@@ -22,16 +21,16 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
         let condition : Condition = rule.Condition
 
         // Match the event name.
-        let matchEventName (rule : Rule) (traceEvent : TraceEvent): bool = 
+        let matchEventName (rule : Rule) (traceEvent : TraceEvent) : bool = 
             traceEvent.EventName = condition.Conditioner.ConditionerEvent
         
         // Check if the specified payload exists.
-        let checkPayload (rule : Rule) (traceEvent : TraceEvent): bool = 
+        let checkPayload (rule : Rule) (traceEvent : TraceEvent) : bool = 
             if traceEvent.PayloadNames.Contains condition.Conditioner.ConditionerProperty then true
             else false
 
         // Check if the condition matches.
-        let checkConditionValue (rule : Rule) (traceEvent : TraceEvent): bool =
+        let checkConditionValue (rule : Rule) (traceEvent : TraceEvent) : bool =
             let payload : double   = Double.Parse(traceEvent.PayloadByName(condition.Conditioner.ConditionerProperty).ToString())
             let conditionalValue   : ConditionalValue = rule.Condition.ConditionalValue
 
@@ -52,7 +51,7 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
         // Match on Event Name, if the payload exists and the condition based on the trace event is met.
         matchEventName rule traceEvent && checkPayload rule traceEvent && checkConditionValue rule traceEvent
 
-    let apply (action : Action): unit = 
+    let apply (action : Action) : unit = 
 
         match action.ActionOperator with
         | ActionOperator.Print ->

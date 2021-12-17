@@ -4,6 +4,8 @@ open System
 open CommandLine
 open Argu
 
+open RulesEngine.Parser
+
 [<EntryPoint>]
 let main argv =
     AnsiConsole.MarkupLine("[underline green]Welcome to MokoSan's FSharp Advent 2021![/] ");
@@ -14,9 +16,7 @@ let main argv =
     let parsedArgs  = parser.Parse(inputs = argv, raiseOnUsage = true)
     let parsedArray = parsedArgs.GetAllResults()
 
-    // TODO: Split paths between the Trace Log vs. Real Time.
-    // Parse the results.
-    let tracePath = parsedArgs.GetResult TracePath
-    printfn "%A" tracePath
+    let tracePathArgs = parsedArgs.GetResults TracePath
+    printfn "%A" tracePathArgs
 
     0
