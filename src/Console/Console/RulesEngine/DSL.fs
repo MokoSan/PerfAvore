@@ -45,7 +45,7 @@ type Rule =
     { Id           : Guid
       Condition    : Condition
       Action       : Action 
-      OriginalRule : string }
+      InputRule    : string }
 
 // Invoked Actions: Once an action is invoked, store the context and the result.
 type InvokedActionContext = 

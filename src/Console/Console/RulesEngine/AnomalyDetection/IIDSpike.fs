@@ -25,9 +25,9 @@ type Prediction() =
 // double * double -> Timestamp * Value
 let getAnomalies (input : (double * double) seq ) =
     let dataView = 
-        ctx
-            .Data
-            .LoadFromEnumerable<Input>(input |> Seq.map(fun (timestamp, value) -> Input(timestamp = timestamp, value = float32 value) ))
+        ctx.Data
+           .LoadFromEnumerable<Input>( input 
+                                      |> Seq.map(fun (timestamp, value) -> Input(timestamp = timestamp, value = float32 value)))
         
     let anomalyPValueHistoryLength = 30
     let anomalyConfidence = 95.

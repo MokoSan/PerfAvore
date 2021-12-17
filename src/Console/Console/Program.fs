@@ -12,7 +12,7 @@ open Microsoft.Diagnostics.Tracing
 
 [<EntryPoint>]
 let main argv =
-    AnsiConsole.MarkupLine("[underline green]Welcome to MokoSan's FSharp Advent 2021![/] ");
+    AnsiConsole.MarkupLine("[underline green]Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
 
     let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
 
@@ -24,8 +24,8 @@ let main argv =
     let processName   = parsedArgs.GetResult ProcessName
 
     let rules = 
-        [ "GC/AllocationTick.AllocationAmount > 108000: Print Alert"; 
-          "GC/AllocationTick.AllocationAmount > 200000: Print Alert"; 
+        [ "GC/AllocationTick.AllocationAmount > 108000: Print CallStack"; 
+          "GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
           "ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; ]
 
     let parsedRules = 

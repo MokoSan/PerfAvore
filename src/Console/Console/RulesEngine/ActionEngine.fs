@@ -63,7 +63,7 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
         | ActionOperator.Print ->
             match action.ActionOperand with
             | ActionOperand.Alert     -> printAlert rule traceEvent
-            | ActionOperand.CallStack -> printCallStack (traceEvent.CallStack())
+            | ActionOperand.CallStack -> printCallStack rule traceEvent
     
     if checkCondition = true then apply rule.Action
     else ()

@@ -66,4 +66,4 @@ let parseRule (ruleAsString : string) : Rule =
     let splitRuleAsAString : string[] = ruleAsString.Split(":")
     let condition : Condition = parseCondition splitRuleAsAString.[0]
     let action : Action = parseAction splitRuleAsAString.[1]
-    { Condition = condition; Action = action; OriginalRule = ruleAsString; Id = Guid.NewGuid() }
+    { Condition = condition; Action = action; InputRule = ruleAsString; Id = Guid.NewGuid() }
