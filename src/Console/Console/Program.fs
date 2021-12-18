@@ -15,37 +15,57 @@ open Microsoft.Diagnostics.Tracing
 let main argv =
     AnsiConsole.MarkupLine("[underline green]Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
 
-    let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
-    let parser      = ArgumentParser.Create<Arguments>(errorHandler = errorHandler)
-    let parsedArgs  = parser.Parse(inputs = argv, raiseOnUsage = true)
+    let errorHandler      = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
+    let parser            = ArgumentParser.Create<Arguments>(errorHandler = errorHandler)
+    let parsedCommandline = parser.Parse(inputs = argv, raiseOnUsage = true)
 
-    // Get Command Line Args 
-    let processName   = parsedArgs.GetResult ProcessName
+    // Process Name is mandatory.
+    let processName       = parsedCommandline.GetResult ProcessName
 
-    // TODO: Change this..
-    // If no trace path is given, revert to the Real Time Session.
-    let tracePathArgs = parsedArgs.GetResult TracePath
-
+    // TODO: Move to a JSON File.
     let parsedRules : Rule list =
         [ 
-          //"GC/AllocationTick.AllocationAmount > 108000: Print Alert"; 
+          "GC/AllocationTick.AllocationAmount > 108000: Print Alert"; 
           "GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
           //"GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Chart"; 
           //"ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; 
         ]
         |> List.map(parseRule)
 
-    let traceLog = getTraceLogFromTracePath tracePathArgs
+    let containsTracePath : bool = parsedCommandline.Contains TracePath
 
-    let events = traceLog.Events 
-    let applyRule (events : TraceEvent seq) (rule : Rule) = 
-        events
-        |> Seq.filter(fun e -> e.ProcessName = processName)
-        |> Seq.filter(fun e -> e.EventName = rule.Condition.Conditioner.ConditionerEvent)
-        |> Seq.iter(fun e -> applyRule rule e)
+    // If the trace log file is provided, use the Trace Log API to traverse through all events.
+    if containsTracePath then 
+        let tracePathArgs = parsedCommandline.GetResult TracePath
+        let traceLog = getTraceLogFromTracePath tracePathArgs
+        let events = traceLog.Events 
+        let eventNamesToFilter = parsedRules |> List.map(fun r -> r.Condition.Conditioner.ConditionerEvent.ToString())
 
-    parsedRules
-    |> List.map(fun e -> applyRule events e)
-    |> ignore
+        let applyRulesForAllEvents (events : TraceEvent seq) (rules : Rule list) = 
+            events
+            // Consider events with name of the process and if they contain the events defined in the rules.
+            |> Seq.filter(fun e -> e.ProcessName = processName                      && 
+                                   eventNamesToFilter |> List.contains(e.EventName))
+            |> Seq.iter(fun e -> 
+                rules
+                |> List.iter(fun rule -> applyRule rule e ))
+        applyRulesForAllEvents events parsedRules
+
+    // Else, start a Real Time Session.
+    // Requires admin privileges
+    else
+        let traceLogEventSource, session = getRealTimeSession
+        let callbackForAllEvents : Action<TraceEvent> = 
+            Action<TraceEvent>(fun traceEvent -> 
+                parsedRules
+                |> List.iter(fun rule -> applyRule rule traceEvent))
+
+        traceLogEventSource.Clr.add_All(callbackForAllEvents)    |> ignore
+        traceLogEventSource.Kernel.add_All(callbackForAllEvents) |> ignore
+
+        Console.CancelKeyPress.Add(fun e -> session.Dispose() |> ignore )
+
+        traceLogEventSource.Process() |> ignore
+        ()
 
     0

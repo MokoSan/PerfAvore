@@ -3,9 +3,9 @@ module CommandLine
 open Argu
 
 type Arguments = 
+    | TracePath of Path : string
     | [<Mandatory>] ProcessName of string
     | RulesFile of Path : string
-    | TracePath of Path : string
 
     interface IArgParserTemplate with
         member s.Usage =
