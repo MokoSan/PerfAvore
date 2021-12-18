@@ -1,0 +1,4 @@
+[ 
+    "GC/AllocationTick.AllocationAmount > 108000: Print Alert",
+    "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print CallStack"
+]
