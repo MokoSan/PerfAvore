@@ -30,7 +30,7 @@ let main argv =
         [ 
           //"GC/AllocationTick.AllocationAmount > 108000: Print CallStack"; 
           //"GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
-          "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Alert"; 
+          "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Chart"; 
           //"ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; 
         ]
         |> List.map(parseRule)

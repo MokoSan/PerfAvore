@@ -9,6 +9,7 @@ open System.Linq
 open RulesEngine.Domain
 open RulesEngine.Actions.CallStack
 open RulesEngine.Actions.Alert
+open RulesEngine.Actions.Chart
 open AnomalyDetection.Service
 
 open AnomalyDetection.IIDSpike
@@ -78,6 +79,7 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
             match action.ActionOperand with
             | ActionOperand.Alert     -> printAlert rule traceEvent
             | ActionOperand.CallStack -> printCallStack rule traceEvent
+            | ActionOperand.Chart     -> printChart rule anomalyDetectionContextService 
     
     if checkCondition = true then apply rule.Action
     else ()

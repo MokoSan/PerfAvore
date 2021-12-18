@@ -39,6 +39,7 @@ and ActionOperator =
 and ActionOperand =
     | Alert
     | CallStack
+    | Chart
 
 // Rule: A rule consists of a condition and an action.
 type Rule = 

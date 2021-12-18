@@ -58,6 +58,7 @@ let parseAction (actionAsAString : string) : Action =
         match splitAction.[1].ToLower() with
         | "alert"     -> ActionOperand.Alert
         | "callstack" -> ActionOperand.CallStack
+        | "chart"     -> ActionOperand.Chart
         | _           -> invalidArg (nameof splitAction) ($"{splitAction.[1]} is an unrecognized Action Operand.")
 
     { ActionOperator = parseActionOperator; ActionOperand = parseActionOperand }

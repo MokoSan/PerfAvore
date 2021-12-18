@@ -40,7 +40,7 @@ let getAnomaliesUsingIIDSpikeEstimation (input : AnomalyDetectionContext)
         ctx.Transforms.DetectIidSpike(
         outputColumnName    = "Prediction",
         inputColumnName     = "value",
-        side                = AnomalySide.TwoSided,
+        side                = AnomalySide.Positive,
         confidence          = AnomalyDetectionContextService.AnomalyConfidence,  //  Alert Threshold = 1 - options.Confidence / 100;
         pvalueHistoryLength = AnomalyDetectionContextService.AnomalyPValueHistoryLength )
 
