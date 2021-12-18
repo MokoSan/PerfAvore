@@ -19,7 +19,7 @@ let printCallStack (rule: RulesEngine.Domain.Rule) (traceEvent : TraceEvent) : u
         printfn $"Rule: {rule.InputRule} invoked for Event: {traceEvent} however, the call stack associated with the event is null." 
         ()
 
-    let root = Tree($"{rule.InputRule.EscapeMarkup()}");
+    let root = Tree(Rule(rule.InputRule.EscapeMarkup()))
 
     let printStackFrame (callStack : TraceCallStack) : unit =
         if not (isNull callStack.CodeAddress.ModuleFile)
