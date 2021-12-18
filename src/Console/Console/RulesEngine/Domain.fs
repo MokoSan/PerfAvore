@@ -1,6 +1,7 @@
 module RulesEngine.Domain
 
 open System
+open Microsoft.ML.Data
 
 // A rule consists of a Condition and an Action.
 // If the condition is met, the said action will be invoked.
@@ -60,3 +61,19 @@ type InvokedActionResult =
 type InvokedActionResults = InvokedActionResult seq
 
 // Anomaly Detection Based Domain
+type AnomalyDetectionInput() =
+    [<DefaultValue>]
+    [<LoadColumn(0)>]
+    val mutable public timestamp : double 
+
+    [<DefaultValue>]
+    [<LoadColumn(1)>]
+    val mutable public value : float32 
+
+type AnomalyDetectionContext = 
+    { Rule  : Rule 
+      Input : AnomalyDetectionInput }
+type AnomalyDetectionResult = 
+    { Context   : AnomalyDetectionContext
+      IsAnomaly : bool
+      PValue    : double }

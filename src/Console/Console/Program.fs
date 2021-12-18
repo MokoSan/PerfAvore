@@ -5,12 +5,11 @@ open CommandLine
 open Argu
 
 open TraceSession
+
 open RulesEngine.Parser
 open RulesEngine.Domain
 open RulesEngine.ActionEngine
 open Microsoft.Diagnostics.Tracing
-open Microsoft.Diagnostics.Tracing.Session
-open Microsoft.Diagnostics.Tracing.Parsers;
 
 [<EntryPoint>]
 let main argv =
@@ -22,12 +21,18 @@ let main argv =
 
     // Get Command Line Args 
     let processName   = parsedArgs.GetResult ProcessName
+
+    // TODO: Change this..
+    // If no trace path is given, revert to the Real Time Session.
     let tracePathArgs = parsedArgs.GetResult TracePath
 
-    let parsedRules =
-        [ "GC/AllocationTick.AllocationAmount > 108000: Print CallStack"; 
-          "GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
-          "ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; ]
+    let parsedRules : Rule list =
+        [ 
+          //"GC/AllocationTick.AllocationAmount > 108000: Print CallStack"; 
+          //"GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
+          "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Alert"; 
+          //"ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; 
+        ]
         |> List.map(parseRule)
 
     let traceLog = getTraceLogFromTracePath tracePathArgs

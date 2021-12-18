@@ -9,11 +9,11 @@
     <Compile Include="CommandLine.fs" />
     <Compile Include="RulesEngine/Domain.fs" />
     <Compile Include="RulesEngine/Parser.fs" />
+    <Compile Include="RulesEngine/AnomalyDetection/Service.fs" />
+    <Compile Include="RulesEngine/AnomalyDetection/IIDSpike.fs" />
     <Compile Include="RulesEngine/Actions/Alert.fs" />
     <Compile Include="RulesEngine/Actions/CallStack.fs" />
     <Compile Include="RulesEngine/ActionEngine.fs" />
-    <Compile Include="RulesEngine/AnomalyDetection/IIDSpike.fs" />
-    <Compile Include="RulesEngine/AnomalyDetection/Service.fs" />
     <Compile Include="TraceSession.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

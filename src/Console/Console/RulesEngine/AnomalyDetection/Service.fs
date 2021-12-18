@@ -3,6 +3,8 @@ module AnomalyDetection.Service
 open System
 open System.Collections.Concurrent
 
+open RulesEngine.Domain
+
 type FixedSizedQueueForTraceEvents<'T> (capacity : int) =
     // Concurrency might not be necessary but better to be safe than sorry.
     let queue = ConcurrentQueue<'T>()
@@ -10,7 +12,7 @@ type FixedSizedQueueForTraceEvents<'T> (capacity : int) =
     member this.Capacity : int = capacity
     member this.Count    : int = queue.Count
     member this.Print() : unit = 
-        let stringRepr : string = String.Join(",", queue)
+        let stringRepr : string = String.Join(",", queue.ToArray())
         printfn "%A" stringRepr
 
     member this.Insert (item : 'T) : unit = 
@@ -27,16 +29,21 @@ type FixedSizedQueueForTraceEvents<'T> (capacity : int) =
 type AnomalyDetectionContextService(capacity : int) = 
     // Keyed on the Rule Id and Value is a FixedSizeQueueForTraceEvents.
     // Each Rule that has Anomaly Detection associated with it must have its own Fixed Size Queue.
-    let cache = ConcurrentDictionary<Guid, FixedSizedQueueForTraceEvents<double * double>>()
+    let cache = ConcurrentDictionary<Guid, FixedSizedQueueForTraceEvents<AnomalyDetectionInput>>()
 
-    member this.Upsert (ruleId : Guid) (item : double * double) : unit =
+    static member AnomalyPValueHistoryLength : int    = 30
+    static member AnomalyConfidence          : double = 95.
+
+    member this.Upsert (ruleId : Guid) (item : AnomalyDetectionInput) : unit =
         let queueExists, queue = cache.TryGetValue ruleId
         match queueExists, queue with
-        | true, q -> q.Insert item
+        | true, q  -> 
+            q.Insert item
         | false, _ -> 
-            cache.TryAdd(ruleId, FixedSizedQueueForTraceEvents( capacity )) |> ignore
+            cache.[ruleId] <- FixedSizedQueueForTraceEvents( capacity )
+            cache.[ruleId].Insert item
 
-    member this.TryRetrieve(ruleId : Guid) : (double * double) seq option = 
+    member this.TryRetrieve(ruleId : Guid) : AnomalyDetectionInput seq option = 
         let queueExists, queue = cache.TryGetValue ruleId
         match queueExists, queue with
         | true, q  -> Some (q.GetAll())

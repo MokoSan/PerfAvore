@@ -9,6 +9,12 @@ open System.Linq
 open RulesEngine.Domain
 open RulesEngine.Actions.CallStack
 open RulesEngine.Actions.Alert
+open AnomalyDetection.Service
+
+open AnomalyDetection.IIDSpike
+
+let anomalyDetectionContextService : AnomalyDetectionContextService = 
+    AnomalyDetectionContextService(AnomalyDetectionContextService.AnomalyPValueHistoryLength)
 
 let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
 
@@ -25,10 +31,16 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
             if traceEvent.PayloadNames.Contains condition.Conditioner.ConditionerProperty then true
             else false
 
+        let payload : double = Double.Parse (traceEvent.PayloadByName(condition.Conditioner.ConditionerProperty).ToString())
+
+        // Add the new data point to the anomaly detection dict.
+        let anomalyDetectionInput : AnomalyDetectionInput = 
+            AnomalyDetectionInput(timestamp = traceEvent.TimeStampRelativeMSec, value = float32(payload))
+        anomalyDetectionContextService.Upsert rule.Id anomalyDetectionInput |> ignore
+
         // Check if the condition matches.
         let checkConditionValue (rule : Rule) (traceEvent : TraceEvent) : bool =
             let conditionalValue : ConditionalValue = rule.Condition.ConditionalValue
-            let payload          : double = Double.Parse (traceEvent.PayloadByName(condition.Conditioner.ConditionerProperty).ToString())
 
             match conditionalValue with
             | ConditionalValue.Value value ->
@@ -43,7 +55,9 @@ let applyRule (rule : Rule) (traceEvent : TraceEvent) : unit =
             | ConditionalValue.AnomalyDetectionType anomalyDetectionType ->
                 match anomalyDetectionType with
                 | AnomalyDetectionType.DetectIIDSpike ->
-                    false // TODO: Fill This.
+                    let context = { Rule = rule; Input = anomalyDetectionInput }
+                    let result  = getAnomaliesUsingIIDSpikeEstimation context anomalyDetectionContextService 
+                    result.IsAnomaly
 
         // Match on Event Name, if the payload exists and the condition based on the trace event is met.
         matchEventName rule traceEvent && checkPayload rule traceEvent && checkConditionValue rule traceEvent
