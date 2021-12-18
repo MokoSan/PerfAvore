@@ -28,9 +28,9 @@ let main argv =
 
     let parsedRules : Rule list =
         [ 
-          //"GC/AllocationTick.AllocationAmount > 108000: Print CallStack"; 
-          //"GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
-          "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Chart"; 
+          //"GC/AllocationTick.AllocationAmount > 108000: Print Alert"; 
+          "GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
+          //"GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Chart"; 
           //"ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; 
         ]
         |> List.map(parseRule)
