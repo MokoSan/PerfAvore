@@ -11,6 +11,8 @@ open RulesEngine.Domain
 open RulesEngine.ActionEngine
 open Microsoft.Diagnostics.Tracing
 
+open JsonRuleFileReader
+
 [<EntryPoint>]
 let main argv =
     AnsiConsole.MarkupLine("[underline green]Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
@@ -20,16 +22,13 @@ let main argv =
     let parsedCommandline = parser.Parse(inputs = argv, raiseOnUsage = true)
 
     // Process Name is mandatory.
-    let processName       = parsedCommandline.GetResult ProcessName
+    let processName = parsedCommandline.GetResult ProcessName
 
-    // TODO: Move to a JSON File.
-    let parsedRules : Rule list =
-        [ 
-          "GC/AllocationTick.AllocationAmount > 108000: Print Alert"; 
-          "GC/AllocationTick.AllocationAmount > 200000: Print CallStack"; 
-          //"GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Chart"; 
-          //"ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print CallStack"; 
-        ]
+    // Rules are Mandatory.
+    let jsonFile : string = parsedCommandline.GetResult RulesPath
+    
+    let parsedRules : Rule list = 
+        getJsonRulesFromFile jsonFile 
         |> List.map(parseRule)
 
     let containsTracePath : bool = parsedCommandline.Contains TracePath
