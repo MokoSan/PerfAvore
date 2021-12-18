@@ -1,4 +1,4 @@
-module RulesEngine.DSL
+module RulesEngine.Domain
 
 open System
 
@@ -7,7 +7,6 @@ open System
 // Rule = Condition + Action. For example: "GCEnd.PauseTimeMSec >= 300 : Print Alert"
 
 // Condition: A condition consists of a Conditioner, A Condition Type and a Condition Value.
-
 type Condition = 
     {  Conditioner      : Conditioner;
        ConditionType    : ConditionType;
@@ -59,3 +58,5 @@ type InvokedActionContext =
 type InvokedActionResult =
     { Context : InvokedActionContext; Result  : string }
 type InvokedActionResults = InvokedActionResult seq
+
+// Anomaly Detection Based Domain

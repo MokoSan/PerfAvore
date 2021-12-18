@@ -1,4 +1,4 @@
-module RulesEngine.AnomalyDetection.IIDSpike
+module AnomalyDetection.IIDSpike
 
 open Microsoft.ML
 open Microsoft.ML.Data
@@ -19,7 +19,7 @@ type Input() =
 
 type Prediction() = 
     [<DefaultValue>]
-    [<VectorType(3)>] // Prediction + value + p-value
+    [<VectorType(3)>] // prediction i.e. 0/1 + value i.e. payload + p-value
     val mutable public Prediction : double[]
 
 // double * double -> Timestamp * Value

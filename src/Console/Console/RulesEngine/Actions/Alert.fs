@@ -1,6 +1,6 @@
 module RulesEngine.Actions.Alert
 
-open RulesEngine.DSL
+open RulesEngine.Domain
 
 open Microsoft.Diagnostics.Tracing
 

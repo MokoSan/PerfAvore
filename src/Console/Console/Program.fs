@@ -6,9 +6,10 @@ open Argu
 
 open TraceSession
 open RulesEngine.Parser
-open RulesEngine.DSL
+open RulesEngine.Domain
 open RulesEngine.ActionEngine
 open Microsoft.Diagnostics.Tracing
+open Microsoft.Diagnostics.Tracing.Session
 
 [<EntryPoint>]
 let main argv =
@@ -33,6 +34,12 @@ let main argv =
         |> List.map(parseRule)
 
     let traceLog = getTraceLogFromTracePath tracePathArgs
+
+    use traceEventSession = new TraceEventSession($"GCRealMonSession_{Guid.NewGuid()}");
+    let action = Action<TraceEvent>(fun e -> printfn "%A" e)
+    traceEventSession.Source.add_AllEvents (action)
+    let thisHasSideEffects = traceEventSession.Source.Process() 
+
 
     let events = traceLog.Events 
     let applyRule (events : TraceEvent seq) (rule : Rule) = 

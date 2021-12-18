@@ -6,7 +6,7 @@ open Microsoft.Diagnostics.Tracing.Etlx
 open System
 open System.Linq
 
-open RulesEngine.DSL
+open RulesEngine.Domain
 open RulesEngine.Actions.CallStack
 open RulesEngine.Actions.Alert
 

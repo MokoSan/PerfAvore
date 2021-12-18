@@ -6,7 +6,7 @@ open Microsoft.Diagnostics.Tracing
 open Microsoft.Diagnostics.Tracing.Etlx
 open Microsoft.Diagnostics.Symbols
 
-open RulesEngine.DSL
+open RulesEngine.Domain
 
 let symbolReader : SymbolReader = new SymbolReader(TextWriter.Null, SymbolPath.SymbolPathFromEnvironment)
 

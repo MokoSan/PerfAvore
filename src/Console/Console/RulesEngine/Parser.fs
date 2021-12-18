@@ -1,7 +1,7 @@
 module RulesEngine.Parser
 
 open System
-open RulesEngine.DSL
+open RulesEngine.Domain
 
 let parseCondition (conditionAsString : string) : Condition = 
 
