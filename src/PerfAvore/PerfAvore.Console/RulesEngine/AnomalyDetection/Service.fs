@@ -5,7 +5,7 @@ open System.Collections.Concurrent
 
 open RulesEngine.Domain
 
-type FixedSizedQueueForTraceEvents<'T> (capacity : int) =
+type FixedSizeQueue<'T> (capacity : int) =
     // Concurrency might not be necessary but better to be safe than sorry.
     let queue = ConcurrentQueue<'T>()
 
@@ -29,7 +29,7 @@ type FixedSizedQueueForTraceEvents<'T> (capacity : int) =
 type AnomalyDetectionContextService(capacity : int) = 
     // Keyed on the Rule Id and Value is a FixedSizeQueueForTraceEvents.
     // Each Rule that has Anomaly Detection associated with it must have its own Fixed Size Queue.
-    let cache = ConcurrentDictionary<Guid, FixedSizedQueueForTraceEvents<AnomalyDetectionInput>>()
+    let cache = ConcurrentDictionary<Guid, FixedSizeQueue<AnomalyDetectionInput>>()
 
     static member AnomalyPValueHistoryLength : int    = 30
     static member AnomalyConfidence          : double = 95.
@@ -40,7 +40,7 @@ type AnomalyDetectionContextService(capacity : int) =
         | true, q  -> 
             q.Insert item
         | false, _ -> 
-            cache.[ruleId] <- FixedSizedQueueForTraceEvents( capacity )
+            cache.[ruleId] <- FixedSizeQueue( capacity )
             cache.[ruleId].Insert item
 
     member this.TryRetrieve(ruleId : Guid) : AnomalyDetectionInput seq option = 
