@@ -1,6 +1,7 @@
 ﻿open Spectre.Console
 
 open System
+open System.IO
 open CommandLine
 open Argu
 
@@ -15,7 +16,7 @@ open JsonRuleFileReader
 
 [<EntryPoint>]
 let main argv =
-    AnsiConsole.MarkupLine("[underline green]Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
+    AnsiConsole.MarkupLine("[underline green]Perf-Avore, The Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
 
     let errorHandler      = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
     let parser            = ArgumentParser.Create<Arguments>(errorHandler = errorHandler)
@@ -24,12 +25,16 @@ let main argv =
     // Process Name is mandatory.
     let processName = parsedCommandline.GetResult ProcessName
 
-    // Rules are Mandatory.
-    let jsonFile : string = parsedCommandline.GetResult RulesPath
-    
     let parsedRules : Rule list = 
-        getJsonRulesFromFile jsonFile 
-        |> List.map(parseRule)
+        // Rules are needed, if not provided, fall back to the default rules.
+        let jsonFileSupplied : bool = parsedCommandline.Contains RulesPath
+        if jsonFileSupplied then 
+            let jsonFile = parsedCommandline.GetResult RulesPath
+            getJsonRulesFromFile jsonFile 
+            |> List.map(parseRule)
+        else
+            getJsonRulesFromFile (Path.Combine( __SOURCE_DIRECTORY__, "SampleRules", "SampleRules.json"))
+            |> List.map(parseRule)
 
     let containsTracePath : bool = parsedCommandline.Contains TracePath
 
@@ -43,7 +48,7 @@ let main argv =
         let applyRulesForAllEvents (events : TraceEvent seq) (rules : Rule list) = 
             events
             // Consider events with name of the process and if they contain the events defined in the rules.
-            |> Seq.filter(fun e -> e.ProcessName = processName                      && 
+            |> Seq.filter(fun e -> e.ProcessName = processName  && 
                                    eventNamesToFilter |> List.contains(e.EventName))
             |> Seq.iter(fun e -> 
                 rules
@@ -53,15 +58,7 @@ let main argv =
     // Else, start a Real Time Session.
     // Requires admin privileges
     else
-        let traceLogEventSource, session = getRealTimeSession
-        let callbackForAllEvents : Action<TraceEvent> = 
-            Action<TraceEvent>(fun traceEvent -> 
-                parsedRules
-                |> List.iter(fun rule -> applyRule rule traceEvent))
-
-        traceLogEventSource.Clr.add_All(callbackForAllEvents)    |> ignore
-        traceLogEventSource.Kernel.add_All(callbackForAllEvents) |> ignore
-
+        let traceLogEventSource, session = getRealTimeSession processName parsedRules
         Console.CancelKeyPress.Add(fun e -> session.Dispose() |> ignore )
 
         traceLogEventSource.Process() |> ignore

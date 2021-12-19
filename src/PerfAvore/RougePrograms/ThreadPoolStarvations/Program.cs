@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
 
+
+ThreadPool.SetMinThreads(1,1);
+
 while (true)
 {
     Task.Run(() => {

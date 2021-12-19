@@ -3,8 +3,8 @@ module CommandLine
 open Argu
 
 type Arguments = 
-    | TracePath of Path : string
     | [<Mandatory>] ProcessName of string
+    | TracePath of Path : string
     | RulesPath of Path : string
 
     interface IArgParserTemplate with

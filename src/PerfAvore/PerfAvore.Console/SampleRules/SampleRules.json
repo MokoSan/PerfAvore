@@ -1,0 +1,5 @@
+[ 
+    "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print Alert",
+    "GC/AllocationTick.AllocationAmount > 110000 : Print CallStack",
+    "ThreadPoolWorkerThreadAdjustment/Stats.Throughput < 4: Print Alert"
+]
