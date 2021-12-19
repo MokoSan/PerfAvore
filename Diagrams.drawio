@@ -1,16 +1,16 @@
 <mxfile host="65bd71144e">
     <diagram id="HzLGe-aGvWfrttBoRO2o" name="Idea">
-        <mxGraphModel dx="1521" dy="952" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1435" dy="1158" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="17" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.357;entryY=0.011;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="2" target="13">
+                <mxCell id="17" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.357;entryY=0.011;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="2" target="13" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="2" value="&lt;u&gt;Rules&lt;/u&gt;&lt;br&gt;&lt;span style=&quot;text-align: left&quot;&gt;&amp;nbsp; &amp;nbsp; - GC/AllocationTick.AllocationAmount IsAnomaly IIDSpikeDetection : Print Alert&lt;/span&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;- GC/AllocationTick.AllocationAmount &amp;gt; 200000 : Print CallStack&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;- GC/AllocationTick.AllocationAmount IsAnomaly IIDSpikeDetection : Print Chart&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="31" y="-54" width="453" height="118" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4" target="13">
+                <mxCell id="15" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4" target="13" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="4" value="ETW: Traces / Real Time Process Monitoring" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -27,31 +27,50 @@
                         <mxPoint y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="13" value="Perf Avore" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="13" value="Perf Avore" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="172" y="100" width="239" height="124" as="geometry"/>
                 </mxCell>
-                <mxCell id="22" value="" style="shape=flexArrow;endArrow=classic;html=1;" edge="1" parent="1">
+                <mxCell id="22" value="" style="shape=flexArrow;endArrow=classic;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="430" y="162" as="sourcePoint"/>
                         <mxPoint x="538" y="162" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="23" value="Call Stacks" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rotation=-25;" vertex="1" connectable="0" parent="22">
+                <mxCell id="23" value="Call Stacks" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rotation=-25;" parent="22" vertex="1" connectable="0">
                     <mxGeometry x="-0.4268" y="6" relative="1" as="geometry">
                         <mxPoint y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="25" value="" style="shape=flexArrow;endArrow=classic;html=1;" edge="1" parent="1">
+                <mxCell id="25" value="" style="shape=flexArrow;endArrow=classic;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="428" y="203" as="sourcePoint"/>
                         <mxPoint x="536" y="203" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="26" value="Charts" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rotation=-25;" vertex="1" connectable="0" parent="25">
+                <mxCell id="26" value="Charts" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rotation=-25;" parent="25" vertex="1" connectable="0">
                     <mxGeometry x="-0.4268" y="6" relative="1" as="geometry">
                         <mxPoint y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="Y7ipnytZ90Fjb7Mo1qqL" name="RuleParsing">
+        <mxGraphModel dx="1035" dy="758" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="8z6K1z49lIa_prutMuBR-0"/>
+                <mxCell id="8z6K1z49lIa_prutMuBR-1" parent="8z6K1z49lIa_prutMuBR-0"/>
+                <mxCell id="ENZh84IOE6X-0gjaXaSX-0" value="Parse&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="8z6K1z49lIa_prutMuBR-1">
+                    <mxGeometry x="145" y="184" width="176" height="99" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="EnoVCgbIJ1hhXuNKoYnJ" name="RuleApplication">
+        <mxGraphModel dx="1035" dy="758" grid="0" gridSize="10" guides="0" tooltips="0" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="6B02rwvSFfJfP9BrK-RL-0"/>
+                <mxCell id="6B02rwvSFfJfP9BrK-RL-1" parent="6B02rwvSFfJfP9BrK-RL-0"/>
             </root>
         </mxGraphModel>
     </diagram>
