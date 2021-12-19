@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.1.1" />
     <PackageReference Include="Fsharp.Plotly" Version="1.2.2" />
+    <PackageReference Include="Microsoft.Diagnostics.NETCore.Client" Version="0.2.257301" />
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.74" />
     <PackageReference Include="Microsoft.ML" Version="1.7.0" />
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.7.0" />

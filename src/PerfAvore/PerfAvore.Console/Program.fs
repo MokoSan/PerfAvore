@@ -33,6 +33,7 @@ let main argv =
             getJsonRulesFromFile jsonFile 
             |> List.map(parseRule)
         else
+            // Fall back to the Sample Rules.
             getJsonRulesFromFile (Path.Combine( __SOURCE_DIRECTORY__, "SampleRules", "SampleRules.json"))
             |> List.map(parseRule)
 
@@ -59,7 +60,7 @@ let main argv =
     // Requires admin privileges
     else
         let traceLogEventSource, session = getRealTimeSession processName parsedRules
-        Console.CancelKeyPress.Add(fun e -> session.Dispose() |> ignore )
+        Console.CancelKeyPress.Add(fun _ -> session.Dispose() |> ignore )
 
         traceLogEventSource.Process() |> ignore
         ()

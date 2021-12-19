@@ -19,7 +19,7 @@ let printChart (rule : Rule) (service : AnomalyDetectionContextService) : unit =
     let scatterPoint = seq { point.timestamp, point.value }
 
     [
-        Chart.Line (input, Name = $"Trend") 
+        Chart.Line (input, Name = $"Trend for {point.timestamp}") 
         Chart.Scatter (scatterPoint, mode = StyleParam.Mode.Markers, Name="Anomaly Point")
     ]
     |> Chart.Combine
