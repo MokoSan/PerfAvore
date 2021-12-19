@@ -19,6 +19,11 @@ let getTraceLogFromTracePath (tracePath : string) : TraceLog =
 
 let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceEventDispatcher * IDisposable = 
 
+    let callbackForAllEvents : Action<TraceEvent> = 
+        Action<TraceEvent>(fun traceEvent -> 
+            parsedRules
+            |> List.iter(fun rule -> applyRule rule traceEvent))
+
     // Windows.
     if RuntimeInformation.IsOSPlatform OSPlatform.Windows then
         let traceEventSession : TraceEventSession = new TraceEventSession($"Session_{Guid.NewGuid()}");
@@ -31,11 +36,6 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
         let traceLogEventSource = TraceLog.CreateFromTraceEventSession traceEventSession
 
         // Add all the necessary callbacks.
-        let callbackForAllEvents : Action<TraceEvent> = 
-            Action<TraceEvent>(fun traceEvent -> 
-                parsedRules
-                |> List.iter(fun rule -> applyRule rule traceEvent))
-
         traceLogEventSource.Clr.add_All(callbackForAllEvents)    |> ignore
         traceLogEventSource.Kernel.add_All(callbackForAllEvents) |> ignore
 
@@ -57,7 +57,11 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
         if processes.Length < 1 then invalidArg processName $"No processes with name: {processName} exists."
         else 
             let processId        = processes.[0].Id
-            let client           = DiagnosticsClient(processId);
-            let eventPipeSession = client.StartEventPipeSession(providers, false);
-            let source           = new EventPipeEventSource(eventPipeSession.EventStream);
+            let client           = DiagnosticsClient(processId)
+            let eventPipeSession = client.StartEventPipeSession(providers, false)
+            let source           = new EventPipeEventSource(eventPipeSession.EventStream)
+
+            source.Clr.add_All(callbackForAllEvents)
+            source.Kernel.add_All(callbackForAllEvents)
+
             source, eventPipeSession
