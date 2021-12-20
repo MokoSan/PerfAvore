@@ -1,0 +1,1870 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{AdventSubmission}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{perf-avore-a-performance-analysis-and-monitoring-tool-in-fsharp}{%
+\section{Perf Avore: A Performance Analysis and Monitoring Tool in
+FSharp}\label{perf-avore-a-performance-analysis-and-monitoring-tool-in-fsharp}}
+
+For my 2021 F\# Advent Submission (5 years of submissions!!!!), I
+developed a Performance Based Monitoring and Analysis Tool called
+``\emph{Perf-Avore}'' that applies user specified \textbf{Rules} that
+consists of \textbf{Conditions} to match based on Trace Events from
+either an .ETL trace or a real time session and if the conditions are
+met, \textbf{Actions} specified in the rule are invoked. The types of
+\textbf{Conditions} could include to check if the trace event property
+is an anomaly i.e.~a deviant point based on an anomaly detection
+algorithm or is simply above a threshold value specified in the rule.
+Similarly, types of \textbf{Actions} could be specified that lead to
+different outputs such as printing out the callstacks, charting the data
+point or just simply alerting the user that a condition is met.
+
+The \textbf{purpose} of Perf Avore is to provide users an easy and
+configurable way to detect and diagnose performance issues effectively
+by specifying details that are pertinent to performance issues in the
+rule itself. A use case, for example, is detecting spikes in memory
+allocations that can put unwanted pressure on the Garbage Collector and
+inevitably slow down the process. By specifying a rule that tracks
+\texttt{AllocationAmount} on the \texttt{GC/AllocationTick} event if it
+goes above a specified amount and then printing out the callstack for it
+can shed light on the impetus behind the increased pressure.
+
+\hypertarget{high-level-overview}{%
+\subsection{High Level Overview}\label{high-level-overview}}
+
+\begin{figure}
+\centering
+\includegraphics{Images/HighlevelIdea.png}
+\caption{High Level Idea}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Users provide rules.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Rules consist of conditions and actions.
+  \item
+    Conditions Include:
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      The Name of the Trace Event and the property they'd like to track.
+    \item
+      The condition or case for which they'd like to act on.
+    \end{enumerate}
+  \end{enumerate}
+\item
+  Trace Events are proffered to the rules engine to apply the rules to.
+\item
+  Based on either a given trace or by real time monitoring, conditions
+  are checked for and actions are invoked based on a stream of trace
+  events.
+\item
+  Examples of Rules:
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \texttt{GC/AllocationTick.AllocationAmount\ \textgreater{}\ 200000\ :\ Print\ Alert}
+  \item
+    \texttt{ThreadPoolWorkerThreadAdjustment/Stats.Throughput\ \textless{}\ 4\ :\ Print\ CallStack}
+  \item
+    \texttt{GC/HeapStats.GenerationSize0\ isAnomaly\ DetectIIDSpike\ :\ Print\ Chart}
+  \end{enumerate}
+\end{enumerate}
+
+The code is available
+\href{https://github.com/MokoSan/FSharpAdvent_2021/tree/main/src/PerfAvore/PerfAvore.Console}{here}.
+
+To
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Directly jump into the details without reading about the experience
+  developing in FSharp and the motivation, click
+  \href{https://nbviewer.org/github/MokoSan/PerfAvore/blob/main/AdventSubmission.ipynb\#Plan}{here}.
+\item
+  Start learning how to run Perf Avore click
+  \href{https://nbviewer.org/github/MokoSan/PerfAvore/blob/main/AdventSubmission.ipynb\#How-To-Run-Perf-Avore}{here}.
+\end{enumerate}
+
+\hypertarget{experience-developing-in-fsharp}{%
+\subsection{Experience Developing in
+FSharp}\label{experience-developing-in-fsharp}}
+
+F\#, once again, didn't fail to deliver an incredible development
+experience! Despite not developing in F\# for an extended period of time
+(much to my regret - I kicked myself about this during last year's
+\href{https://bit.ly/3hhhRjq}{submission} as well), I was able to let
+the muscle memory from my previous projects kick in and reached a
+productive state surprisingly quickly; I'd like to underscore that this
+is more of a testament to the ease of usage of the language speaking
+volumes about the user-friendly nature of the language itself (and not
+necessarily my some-what-sophomoric acumen).
+
+Granted, I didn't make use of all the bells and whistles the language
+had to offer, what I did make use of was incredibly easy to get stuff
+done with. The particular aspects of the language that made it easy to
+develop a Domain Specific Language, a parser for that domain specific
+language and dynamic application of the actions are Pattern Matching and
+Immutable Functional Data Structures such as Records and Discriminated
+Unions that make expressing the domain succinctly and lucidly not only
+for the developer but also the reader.
+
+An image that typifies the incredibly accessible nature of F\# is the
+following one filched from a presentation by
+\href{https://twitter.com/dsymetweets}{Don Syme} and
+\href{https://twitter.com/KathleenDollard}{Kathleen Dollard} during this
+year's .NET Conf in November:
+
+\begin{figure}
+\centering
+\includegraphics{Images/WhyFSharp.jpg}
+\caption{Why FSharp}
+\end{figure}
+
+\hypertarget{inspiration-for-the-project}{%
+\subsection{Inspiration For the
+Project}\label{inspiration-for-the-project}}
+
+Perf Avore was heavily inspired by
+\href{https://twitter.com/maoni0}{maoni0's}
+\href{https://github.com/Maoni0/realmon}{realmon}, a monitoring tool
+that tells you when GCs happen in a process and some characteristics
+about these GCs. My contributions and associated interactions for
+realmon definitely were incredibly instrumental in coming up with this
+idea and it's implementation.
+
+Additionally, as a Perf Engineer, I find that there are times where I
+need to arduously load traces in Perf View, resolve symbols and wait
+until all the windows open up to do basic things such as look up a
+single call stack for a single event or look up the payload value of a
+single event. By devising a simpler solution, I wish to reduce my perf
+investigation time as I build on this project.
+
+\hypertarget{years-going-strong}{%
+\subsection{5 Years Going Strong!}\label{years-going-strong}}
+
+It has been 5 years of submissions to the FSharp Advent event and it has
+been an awesome experience. Here are links to my previous posts:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \href{https://bit.ly/3hhhRjq}{2020: Bayesian Inference in F\#}
+\item
+  \href{http://t.co/KqE8kfaZQ7}{2019: Building A Simple Recommendation
+  System in F\#}
+\item
+  \href{https://t.co/fdssLnvzLX}{2018: An Introduction to Probabilistic
+  Programming in F\#}
+\item
+  2017: The Lord of The Rings: An F\# Approach
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \href{https://t.co/8qGEiwNniY}{Introduction}
+  \item
+    \href{https://t.co/UtFQRj3W3X}{The Path of the Hobbits}
+  \item
+    \href{https://t.co/6AzIg7voAb}{The Path of the Wizard}
+  \item
+    \href{https://t.co/ko6bubJqsw}{The Path of the King}
+  \end{enumerate}
+\end{enumerate}
+
+Now that a basic overview and other auxiliary topics have been covered,
+without much more ceremony, I'll be diving into how I built Perf Avore.
+
+\hypertarget{plan}{%
+\subsection{Plan}\label{plan}}
+
+The plan to get rule applications working is threefold:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Parse Rules}: Convert the user inputted string based rules to
+  a domain defined Rule.
+\item
+  \textbf{Process Trace Events}: Retrieve trace events from either a
+  trace or a real time process.
+\item
+  \textbf{Apply Rules}: If the conditions of a rule are met, invoke the
+  action associated with the rule.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics{Images/BirdsEyeView.png}
+\caption{Birds Eye View}
+\end{figure}
+
+However, before implementation is presented, it is of paramount
+importance to define the domain.
+
+\hypertarget{the-domain}{%
+\subsection{The Domain}\label{the-domain}}
+
+A Rule is defined as having a \textbf{Condition} and an \textbf{Action}.
+
+\texttt{GC/AllocationTick.AllocationAmount\ \textgreater{}\ 200000\ :\ Print\ Alert}
+
+Here, the user requests that for the said process, an alert will be
+printed if the \texttt{AllocationAmount} of the
+\texttt{GC/AllocationTick} event is greater than 200,000 bytes. The
+action if the condition is met is that of alerting the user by
+outputting a message.
+
+A rule, more generally, is of the following format:
+
+\texttt{EventName.PropertyName\ ConditionalOperator\ ConditionalOperand\ :\ ActionOperator\ ActionOperand}
+
+where:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}@{}}
+\toprule
+Part & Description \\
+\midrule
+\endhead
+Event Name & The event name from the trace / real time analysis for
+which we want to look up the property. \\
+Property Name & A double property (this may change in the future) for
+which we'd want to construct a rule for. \\
+Conditional Operator & An operator that, along with the Conditional
+Operand, will dictate situation for which we'll invoke an action for. \\
+Conditional Operand & The value or name of the anomaly detection
+operator along with the Conditional Operator that'll dictate the
+situation for which we'll invoke an action for. \\
+Action Operator & The operator that, along with the action operand will
+be invoked if a condition is met. \\
+Action Operand & The operand for which the action operator will be
+applied to in case a condition is met. \\
+\bottomrule
+\end{longtable}
+
+The \textbf{Condition} is modeled as the following combination of
+records and discriminated unions:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Domain.fs}
+
+\PY{k}{type} \PY{n+nc}{Condition} \PY{o}{=} 
+    \PY{o}{\PYZob{}}  \PY{n}{Conditioner}      \PY{o}{:} \PY{n}{Conditioner}
+       \PY{n}{ConditionType}    \PY{o}{:} \PY{n}{ConditionType}
+       \PY{n}{ConditionalValue} \PY{o}{:} \PY{n}{ConditionalValue} \PY{o}{\PYZcb{}}
+\PY{o+ow}{and} \PY{n}{Conditioner} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{ConditionerEvent}    \PY{o}{:} \PY{n}{ConditionerEvent} 
+      \PY{n}{ConditionerProperty} \PY{o}{:} \PY{n}{ConditionerProperty} \PY{o}{\PYZcb{}}
+\PY{o+ow}{and} \PY{n}{ConditionType} \PY{o}{=} 
+    \PY{o}{|} \PY{n}{LessThan}
+    \PY{o}{|} \PY{n}{LessThanEqualTo}
+    \PY{o}{|} \PY{n}{GreaterThan}
+    \PY{o}{|} \PY{n}{GreaterThanEqualTo}
+    \PY{o}{|} \PY{n}{Equal}
+    \PY{o}{|} \PY{n}{NotEqual}
+    \PY{o}{|} \PY{n}{IsAnomaly}
+\PY{o+ow}{and} \PY{n}{ConditionalValue} \PY{o}{=}
+    \PY{o}{|} \PY{n}{Value} \PY{k}{of} \PY{k+kt}{double}
+    \PY{o}{|} \PY{n}{AnomalyDetectionType} \PY{k}{of} \PY{n}{AnomalyDetectionType} 
+\PY{o+ow}{and} \PY{n}{ConditionerEvent}    \PY{o}{=} \PY{k+kt}{string}
+\PY{o+ow}{and} \PY{n}{ConditionerProperty} \PY{o}{=} \PY{k+kt}{string}
+\PY{o+ow}{and} \PY{n}{AnomalyDetectionType} \PY{o}{=}
+    \PY{o}{|} \PY{n}{DetectIIDSpike}
+\end{Verbatim}
+\end{tcolorbox}
+
+    To accommodate Anomaly Detection algorithms we add a \texttt{IsAnomaly}
+as a \texttt{ConditionType} which, rather than relying on a hardcoded
+threshold for the Conditional Value will relegate invoking an action
+onto an Anomaly Detection algorithm. The one that's implemented for this
+submission is that of an Independently and Identically Distributed Spike
+anomaly detection algorithm; more details are given below.
+
+For the sake of completeness, the conditions we define are the
+following:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}@{}}
+\toprule
+Condition Operation & Description \\
+\midrule
+\endhead
+IsAnomaly & The condition to match on an anomaly detection algorithm. \\
+\textgreater{} \textgreater= \textless{} \textless= != = & Self
+explanatory conditional matching based on the value of the event
+property specified by the rule \\
+\bottomrule
+\end{longtable}
+
+It is worth noting, right now the library only accepts numeric payloads.
+
+An Action is modeled as a record of an \textbf{ActionOperator} and an
+\textbf{ActionOperand}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Domain.fs}
+
+\PY{k}{type} \PY{n+nc}{Action} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{ActionOperator}\PY{o}{:} \PY{n}{ActionOperator}\PY{o}{;} \PY{n}{ActionOperand}\PY{o}{:} \PY{n}{ActionOperand} \PY{o}{\PYZcb{}}
+\PY{o+ow}{and} \PY{n}{ActionOperator} \PY{o}{=} 
+    \PY{o}{|}  \PY{n}{Print}
+\PY{o+ow}{and} \PY{n}{ActionOperand} \PY{o}{=}
+    \PY{o}{|} \PY{n}{Alert}
+    \PY{o}{|} \PY{n}{CallStack}
+    \PY{o}{|} \PY{n}{Chart}
+\end{Verbatim}
+\end{tcolorbox}
+
+    The following are the currently implemented action operands:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}@{}}
+\toprule
+Name of Action Operands & Description \\
+\midrule
+\endhead
+Alert & Alerting Mechanism that'll print out pertinent details about the
+rule invoked and why it was invoked. \\
+Call Stack & If a call stack is available, it will be printed out on the
+console. \\
+Chart & A chart of data points preceding and including the one that
+triggered the condition of the rule is generated and rendered as an html
+file \\
+\bottomrule
+\end{longtable}
+
+As of now, \texttt{Print} is the only operator that simply outputs the
+operand to the Console.
+
+The Rule, a combination of a Condition and a Action along with an
+identifier and the original rule passed in by the user and therefore is
+modeled as:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Domain.fs}
+
+\PY{k}{type} \PY{n+nc}{Rule} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{Id}           \PY{o}{:} \PY{n}{Guid}
+      \PY{n}{Condition}    \PY{o}{:} \PY{n}{Condition}
+      \PY{n}{Action}       \PY{o}{:} \PY{n}{Action} 
+      \PY{n}{InputRule}    \PY{o}{:} \PY{k+kt}{string} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Now that the domain is defined, the rule parsing logic can be explained;
+this makes extensive use of pattern matching after deserializing a list
+of rules from a specified JSON file that could look like the following:
+
+\begin{verbatim}
+[ 
+    "GC/AllocationTick.AllocationAmount > 108000: Print Alert",
+    "GC/AllocationTick.AllocationAmount isAnomaly DetectIIDSpike : Print CallStack"
+]
+\end{verbatim}
+
+\hypertarget{step-1-parse-rule}{%
+\subsection{Step 1: Parse Rule}\label{step-1-parse-rule}}
+
+\begin{figure}
+\centering
+\includegraphics{Images/Step1_ParseRule.png}
+\caption{Step 1}
+\end{figure}
+
+This first step's goal is take the user inputted rule as a string to a
+Rule defined in the domain. The parsing logic is broken into two main
+functions that break up the logic of parsing the Condition and Action
+separately. The \texttt{parseCondition} function is defined as the
+following and constructs the condition based on the aforementioned
+constituents:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Parser.fs}
+
+\PY{k}{let} \PY{n+nv}{parseCondition} \PY{o}{(}\PY{n}{conditionAsString} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{:} \PY{n}{Condition} \PY{o}{=} 
+
+    \PY{k}{let} \PY{n+nv}{splitCondition} \PY{o}{:} \PY{k+kt}{string}\PY{n+nb+bp}{[]} \PY{o}{=} \PY{n}{conditionAsString}\PY{o}{.}\PY{n}{Split}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{ }\PY{l+s}{\PYZdq{}}\PY{o}{,} \PY{n+nn}{StringSplitOptions}\PY{p}{.}\PY{n}{RemoveEmptyEntries}\PY{o}{)}
+    
+    \PY{c+c1}{// Precondition check}
+    \PY{k}{if} \PY{n}{splitCondition}\PY{o}{.}\PY{n}{Length} \PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}} \PY{l+m+mi}{3}
+    \PY{k}{then} \PY{n}{invalidArg} \PY{o}{(}\PY{n}{nameof} \PY{n}{conditionAsString}\PY{o}{)} \PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Incorrect format of the condition. Format is: Event.Property Condition ConditionalValue. For example: GCEnd.SuspensionTimeMSec \PYZgt{}= 298}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+    
+    \PY{c+c1}{// Condition Event and Property}
+    \PY{k}{let} \PY{n+nv}{parseConditioner} \PY{o}{:} \PY{n}{Conditioner} \PY{o}{=} 
+        \PY{k}{let} \PY{n+nv}{splitConditioner} \PY{o}{:} \PY{k+kt}{string}\PY{n+nb+bp}{[]} \PY{o}{=} \PY{n}{splitCondition}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]}\PY{o}{.}\PY{n}{Split}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{.}\PY{l+s}{\PYZdq{}}\PY{o}{,} \PY{n+nn}{StringSplitOptions}\PY{p}{.}\PY{n}{RemoveEmptyEntries}\PY{o}{)}
+        \PY{k}{let} \PY{n+nv}{parseConditionEvent} \PY{o}{:} \PY{n}{ConditionerEvent} \PY{o}{=} \PY{n}{splitConditioner}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]}
+        \PY{k}{let} \PY{n+nv}{parseConditionProperty} \PY{o}{:} \PY{n}{ConditionerProperty} \PY{o}{=} \PY{n}{splitConditioner}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{1}\PY{o}{]}
+
+        \PY{o}{\PYZob{}} \PY{n}{ConditionerEvent} \PY{o}{=} \PY{n}{parseConditionEvent}\PY{o}{;} \PY{n}{ConditionerProperty} \PY{o}{=} \PY{n}{parseConditionProperty} \PY{o}{\PYZcb{}}
+
+    \PY{c+c1}{// Condition Type}
+    \PY{k}{let} \PY{n+nv}{parseConditionType} \PY{o}{:} \PY{n}{ConditionType} \PY{o}{=}
+        \PY{k}{match} \PY{n}{splitCondition}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{1}\PY{o}{]}\PY{o}{.}\PY{n}{ToLower}\PY{n+nb+bp}{()} \PY{k}{with}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZgt{}}\PY{l+s}{\PYZdq{}}  \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{greaterthan}\PY{l+s}{\PYZdq{}}                                 \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThan} 
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZlt{}}\PY{l+s}{\PYZdq{}}  \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{lessthan}\PY{l+s}{\PYZdq{}}                                    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThan}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZgt{}=}\PY{l+s}{\PYZdq{}} \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{greaterthanequalto}\PY{l+s}{\PYZdq{}} \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{greaterthanorequalto}\PY{l+s}{\PYZdq{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThanEqualTo}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZlt{}=}\PY{l+s}{\PYZdq{}} \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{lessthanequalto}\PY{l+s}{\PYZdq{}}    \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{lessthanorequalto}\PY{l+s}{\PYZdq{}}    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThanEqualTo}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{=}\PY{l+s}{\PYZdq{}}  \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{equal}\PY{l+s}{\PYZdq{}}              \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{equals}\PY{l+s}{\PYZdq{}}               \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{Equal}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{!=}\PY{l+s}{\PYZdq{}} \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{notequal}\PY{l+s}{\PYZdq{}}                                    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{NotEqual}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{isanomaly}\PY{l+s}{\PYZdq{}}                                          \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{IsAnomaly}
+        \PY{o}{|} \PY{o}{\PYZus{}}                                                    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{invalidArg} \PY{o}{(}\PY{n}{nameof} \PY{n}{splitCondition}\PY{o}{)} \PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZdl{}\PYZob{}splitCondition.[1]\PYZcb{} is an unrecognized condition type.}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+
+    \PY{c+c1}{// Condition Value}
+    \PY{k}{let} \PY{n+nv}{parseConditionValue} \PY{o}{:} \PY{n}{ConditionalValue} \PY{o}{=}
+        \PY{k}{let} \PY{n+nv}{conditionalValueAsString} \PY{o}{=} \PY{n}{splitCondition}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{2}\PY{o}{]}\PY{o}{.}\PY{n}{ToLower}\PY{n+nb+bp}{()}
+        \PY{k}{let} \PY{n+nv}{checkDouble}\PY{o}{,} \PY{n}{doubleValue} \PY{o}{=} \PY{n+nn}{Double}\PY{p}{.}\PY{n}{TryParse} \PY{n}{conditionalValueAsString} 
+        \PY{k}{match} \PY{n}{checkDouble}\PY{o}{,} \PY{n}{doubleValue} \PY{k}{with}
+        \PY{o}{|} \PY{k}{true}\PY{o}{,} \PY{n}{v} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{Value}\PY{o}{(}\PY{n}{v}\PY{o}{)}
+        \PY{o}{|} \PY{k}{false}\PY{o}{,} \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} 
+            \PY{k}{match} \PY{n}{conditionalValueAsString} \PY{k}{with}
+            \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{detectiidspike}\PY{l+s}{\PYZdq{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{AnomalyDetectionType}\PY{o}{(}\PY{n+nn}{AnomalyDetectionType}\PY{p}{.}\PY{n}{DetectIIDSpike}\PY{o}{)}
+            \PY{o}{|} \PY{o}{\PYZus{}}                \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{invalidArg} \PY{o}{(}\PY{n}{nameof} \PY{n}{splitCondition}\PY{o}{)} \PY{o}{(}\PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZob{}conditionalValueAsString\PYZcb{} is an unrecognized anomaly detection type.}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+        
+    \PY{o}{\PYZob{}} \PY{n}{Conditioner} \PY{o}{=} \PY{n}{parseConditioner}\PY{o}{;} \PY{n}{ConditionType} \PY{o}{=} \PY{n}{parseConditionType}\PY{o}{;} \PY{n}{ConditionalValue} \PY{o}{=} \PY{n}{parseConditionValue} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Similarly, the action parsing logic is implemented via
+\texttt{parseAction} function:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Parser.fs}
+
+\PY{k}{let} \PY{n+nv}{parseAction} \PY{o}{(}\PY{n}{actionAsAString} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{:} \PY{n}{Action} \PY{o}{=} 
+    \PY{k}{let} \PY{n+nv}{splitAction} \PY{o}{:} \PY{k+kt}{string}\PY{n+nb+bp}{[]} \PY{o}{=} \PY{n}{actionAsAString}\PY{o}{.}\PY{n}{Split}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{ }\PY{l+s}{\PYZdq{}}\PY{o}{,} \PY{n+nn}{StringSplitOptions}\PY{p}{.}\PY{n}{RemoveEmptyEntries}\PY{o}{)}
+
+    \PY{c+c1}{// ActionOperator}
+    \PY{k}{let} \PY{n+nv}{parseActionOperator} \PY{o}{:} \PY{n}{ActionOperator} \PY{o}{=} 
+        \PY{k}{match} \PY{n}{splitAction}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]}\PY{o}{.}\PY{n}{ToLower}\PY{n+nb+bp}{()} \PY{k}{with}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{print}\PY{l+s}{\PYZdq{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ActionOperator}\PY{p}{.}\PY{n}{Print}
+        \PY{o}{|} \PY{o}{\PYZus{}}       \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{invalidArg} \PY{o}{(}\PY{n}{nameof} \PY{n}{splitAction}\PY{o}{)} \PY{o}{(}\PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZob{}splitAction.[0]\PYZcb{} is an unrecognized Action Operator.}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+
+    \PY{c+c1}{// ActionOperand }
+    \PY{k}{let} \PY{n+nv}{parseActionOperand} \PY{o}{:} \PY{n}{ActionOperand} \PY{o}{=} 
+        \PY{k}{match} \PY{n}{splitAction}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{1}\PY{o}{]}\PY{o}{.}\PY{n}{ToLower}\PY{n+nb+bp}{()} \PY{k}{with}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{alert}\PY{l+s}{\PYZdq{}}     \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ActionOperand}\PY{p}{.}\PY{n}{Alert}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{callstack}\PY{l+s}{\PYZdq{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ActionOperand}\PY{p}{.}\PY{n}{CallStack}
+        \PY{o}{|} \PY{l+s}{\PYZdq{}}\PY{l+s}{chart}\PY{l+s}{\PYZdq{}}     \PY{o}{\PYZhy{}\PYZgt{}} \PY{n+nn}{ActionOperand}\PY{p}{.}\PY{n}{Chart}
+        \PY{o}{|} \PY{o}{\PYZus{}}           \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{invalidArg} \PY{o}{(}\PY{n}{nameof} \PY{n}{splitAction}\PY{o}{)} \PY{o}{(}\PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZob{}splitAction.[1]\PYZcb{} is an unrecognized Action Operand.}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+
+    
+    \PY{o}{\PYZob{}} \PY{n}{ActionOperator} \PY{o}{=} \PY{n}{parseActionOperator}\PY{o}{;} \PY{n}{ActionOperand} \PY{o}{=} \PY{n}{parseActionOperand} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Finally, these 2 parsing functions are combined to parse a particular
+rule:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Parser.fs}
+
+\PY{k}{let} \PY{n+nv}{parseRule} \PY{o}{(}\PY{n}{ruleAsString} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{:} \PY{n}{Rule} \PY{o}{=} 
+    \PY{k}{let} \PY{n+nv}{splitRuleAsAString} \PY{o}{:} \PY{k+kt}{string}\PY{n+nb+bp}{[]} \PY{o}{=} \PY{n}{ruleAsString}\PY{o}{.}\PY{n}{Split}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{:}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+    \PY{k}{let} \PY{n+nv}{condition} \PY{o}{:} \PY{n}{Condition} \PY{o}{=} \PY{n}{parseCondition} \PY{n}{splitRuleAsAString}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]}
+    \PY{k}{let} \PY{n+nv}{action} \PY{o}{:} \PY{n}{Action} \PY{o}{=} \PY{n}{parseAction} \PY{n}{splitRuleAsAString}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{1}\PY{o}{]}
+    \PY{o}{\PYZob{}} \PY{n}{Condition} \PY{o}{=} \PY{n}{condition}\PY{o}{;} \PY{n}{Action} \PY{o}{=} \PY{n}{action}\PY{o}{;} \PY{n}{InputRule} \PY{o}{=} \PY{n}{ruleAsString}\PY{o}{;} \PY{n}{Id} \PY{o}{=} \PY{n+nn}{Guid}\PY{p}{.}\PY{n}{NewGuid}\PY{n+nb+bp}{()} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Now that we have the functionality of parsing a rule, we want to move on
+to Step 2 i.e.~Processing Trace Events.
+
+\hypertarget{step-2-process-trace-events}{%
+\subsection{Step 2: Process Trace
+Events}\label{step-2-process-trace-events}}
+
+\begin{figure}
+\centering
+\includegraphics{Images/Step2_ProcessTraceEvents.png}
+\caption{Step 2: Process Trace Events}
+\end{figure}
+
+Since both reading Trace Events from a .ETL file and real time event
+processing had to be accomodated for, a split in the logic is made using
+a command line parameter \texttt{TracePath}; the absence of this command
+line parameter will indicate we want to kick off the real time
+processing logic.
+
+\texttt{Argu}, an F\# specific command line argument parsing library is
+used pattern match based the types of the command line args such as the
+following:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/CommandLine.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Argu}\PY{l+s}{\PYZdq{}} \PY{c+c1}{// Added specifically for this notebook.}
+
+\PY{k}{open} \PY{n+nn}{Argu}
+
+\PY{k}{type} \PY{n+nc}{Arguments} \PY{o}{=} 
+    \PY{o}{|} \PY{o}{[\PYZlt{}}\PY{n}{Mandatory}\PY{o}{\PYZgt{}]} \PY{n}{ProcessName} \PY{k}{of} \PY{k+kt}{string}
+    \PY{o}{|} \PY{n}{TracePath} \PY{k}{of} \PY{n}{Path} \PY{o}{:} \PY{k+kt}{string}
+    \PY{o}{|} \PY{n}{RulesPath} \PY{k}{of} \PY{n}{Path} \PY{o}{:} \PY{k+kt}{string}
+
+    \PY{k}{interface} \PY{n}{IArgParserTemplate} \PY{k}{with}
+        \PY{k}{member} \PY{n}{s}\PY{p}{.}\PY{n+nf}{Usage} \PY{o}{=}
+            \PY{k}{match} \PY{n}{s} \PY{k}{with}
+            \PY{o}{|} \PY{n}{TracePath}   \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{l+s}{\PYZdq{}}\PY{l+s}{Specify a Path to the Trace.}\PY{l+s}{\PYZdq{}}
+            \PY{o}{|} \PY{n}{ProcessName} \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{l+s}{\PYZdq{}}\PY{l+s}{Specify a Process Name.}\PY{l+s}{\PYZdq{}}
+            \PY{o}{|} \PY{n}{RulesPath}   \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{l+s}{\PYZdq{}}\PY{l+s}{Specify a Path to a Json File With the Rules.}\PY{l+s}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    The usage of the trace path is incorporated like the following:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/Program.fs}
+   
+\PY{c+c1}{// This is passed in from the command line but for the sake of demonstration, we\PYZsq{}ll include this as a literal []\PYZlt{}string\PYZgt{}.}
+\PY{k}{let} \PY{n+nv}{argv}              \PY{o}{=} \PY{o}{[|} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZhy{}\PYZhy{}tracepath}\PY{l+s}{\PYZdq{}}\PY{o}{;} \PY{l+s}{\PYZdq{}}\PY{l+s}{Path.etl}\PY{l+s}{\PYZdq{}}\PY{o}{;} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZhy{}\PYZhy{}processname}\PY{l+s}{\PYZdq{}}\PY{o}{;} \PY{l+s}{\PYZdq{}}\PY{l+s}{Test.exe}\PY{l+s}{\PYZdq{}}\PY{o}{|]}
+
+\PY{k}{let} \PY{n+nv}{parser}            \PY{o}{=} \PY{n+nn}{ArgumentParser}\PY{p}{.}\PY{n}{Create}\PY{o}{\PYZlt{}}\PY{n}{Arguments}\PY{o}{\PYZgt{}}\PY{n+nb+bp}{()}
+\PY{k}{let} \PY{n+nv}{parsedCommandline} \PY{o}{=} \PY{n}{parser}\PY{o}{.}\PY{n}{Parse}\PY{o}{(}\PY{n}{inputs} \PY{o}{=} \PY{n}{argv}\PY{o}{)}
+
+\PY{k}{let} \PY{n+nv}{containsTracePath} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=} \PY{n}{parsedCommandline}\PY{o}{.}\PY{n}{Contains} \PY{n}{TracePath}
+\PY{n}{containsTracePath}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    To interface with the Trace Events, the
+\texttt{Microsoft.Diagnostics.Tracing.TraceEvent} library that contains
+the \texttt{TraceLog} API is used to read events from both the .ETL file
+and for real time processing for Windows. Inspired by
+\href{https://twitter.com/dsymetweets/status/1472655546885058570}{this}
+tweet highlighting
+\href{https://carpenoctem.dev/blog/fsharp-for-linux-people/}{this}
+blogpost about F\# integration in Linux, I pursued adding rule
+application functionality for Linux and MacOS; that
+\href{https://www.nuget.org/packages/Microsoft.Diagnostics.NETCore.Client/}{API},
+\texttt{Microsoft.Diagnostics.NETCore.Client} is different from the
+TraceLog one and will be highlighted below in the code.
+
+For further details about the TraceLog API, refer to
+\href{https://github.com/microsoft/perfview/blob/main/documentation/TraceEvent/TraceEventProgrammersGuide.md\#higher-level-processing-tracelog}{this}
+doc. The logic to get the stream of events is achieved by the following
+two functions based on if the \texttt{tracepath} is specified as a
+command line argument.
+
+The code that retrieves the \texttt{TraceLog} abstraction if the
+\texttt{tracepath} arg is specified is the following:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/TraceSession.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget: Microsoft.Diagnostics.Tracing.TraceEvent}\PY{l+s}{\PYZdq{}}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing.Etlx}
+
+\PY{k}{let} \PY{n+nv}{getTraceLogFromTracePath} \PY{o}{(}\PY{n}{tracePath} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{:} \PY{n}{TraceLog} \PY{o}{=} 
+    \PY{n+nn}{TraceLog}\PY{p}{.}\PY{n}{OpenOrConvert} \PY{n}{tracePath}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    And, the code that retrieves the \texttt{TraceEventDispatcher} and
+\texttt{Session} abstraction for that's responsible for real time
+processing and if the \texttt{tracepath} arg isn't specified is the
+following with support for Windows and Linux/MacOS is added:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/TraceSession.fs}
+
+\PY{c+c1}{// Needed for compilation}
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Microsoft.Diagnostics.NETCore.Client}\PY{l+s}{\PYZdq{}}
+
+\PY{c+c1}{// Ignore this impl for now. More details about this in Step 3 but for the sake of success compilation, we need this.}
+\PY{k}{let} \PY{n+nv}{applyRule} \PY{o}{(}\PY{n}{rule}\PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+    \PY{n+nb+bp}{()}
+
+\PY{k}{open} \PY{n+nn}{System}
+\PY{k}{open} \PY{n+nn}{System.Collections.Generic}
+\PY{k}{open} \PY{n+nn}{System.Runtime.InteropServices}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.NETCore.Client}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing.Etlx}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing.Session}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing.Parsers}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing}
+
+\PY{k}{open} \PY{n+nn}{System.Diagnostics}
+
+\PY{k}{let} \PY{n+nv}{getProcessIdForProcessName} \PY{o}{(}\PY{n}{processName} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{:} \PY{n}{int} \PY{o}{=}
+        \PY{k}{let} \PY{n+nv}{processes} \PY{o}{=} \PY{n+nn}{Process}\PY{p}{.}\PY{n}{GetProcessesByName}\PY{o}{(}\PY{n}{processName}\PY{o}{)}
+        \PY{k}{if} \PY{n}{processes}\PY{o}{.}\PY{n}{Length} \PY{o}{\PYZlt{}} \PY{l+m+mi}{1} \PY{k}{then} \PY{n}{invalidArg} \PY{n}{processName} \PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{No processes with name: \PYZob{}processName\PYZcb{} exists.}\PY{l+s}{\PYZdq{}}
+        \PY{c+c1}{// For the sake of simplicity, choose the first process available with the said name. }
+        \PY{k}{else} \PY{n}{processes}\PY{o}{.}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]}\PY{o}{.}\PY{n}{Id}
+
+\PY{k}{let} \PY{n+nv}{getRealTimeSession} \PY{o}{(}\PY{n}{processName} \PY{o}{:} \PY{k+kt}{string}\PY{o}{)} \PY{o}{(}\PY{n}{parsedRules} \PY{o}{:} \PY{n}{Rule} \PY{k+kt}{list}\PY{o}{)} \PY{o}{:} \PY{n}{TraceEventDispatcher} \PY{o}{*} \PY{n}{IDisposable} \PY{o}{=} 
+
+    \PY{k}{let} \PY{n+nv}{callbackForAllEvents} \PY{o}{(}\PY{n}{processId} \PY{o}{:} \PY{n}{int}\PY{o}{)}\PY{o}{:} \PY{n}{Action}\PY{o}{\PYZlt{}}\PY{n}{TraceEvent}\PY{o}{\PYZgt{}} \PY{o}{=} 
+        \PY{n}{Action}\PY{o}{\PYZlt{}}\PY{n}{TraceEvent}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{k}{fun} \PY{n}{traceEvent} \PY{o}{\PYZhy{}\PYZgt{}} 
+            \PY{n}{parsedRules}
+            \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{List}\PY{p}{.}\PY{n}{iter}\PY{o}{(}\PY{k}{fun} \PY{n}{rule} \PY{o}{\PYZhy{}\PYZgt{}}
+                \PY{k}{if} \PY{n}{processId} \PY{o}{=} \PY{n}{traceEvent}\PY{o}{.}\PY{n}{ProcessID} \PY{k}{then} \PY{n}{applyRule} \PY{n}{rule} \PY{n}{traceEvent}\PY{o}{)}\PY{o}{)}
+
+    \PY{k}{let} \PY{n+nv}{processId} \PY{o}{=} \PY{n}{getProcessIdForProcessName} \PY{n}{processName}
+
+    \PY{c+c1}{// Windows.}
+    \PY{k}{if} \PY{n+nn}{RuntimeInformation}\PY{p}{.}\PY{n}{IsOSPlatform} \PY{n+nn}{OSPlatform}\PY{p}{.}\PY{n}{Windows} \PY{k}{then}
+        \PY{k}{let} \PY{n+nv}{traceEventSession} \PY{o}{:} \PY{n}{TraceEventSession} \PY{o}{=} \PY{k}{new} \PY{n}{TraceEventSession}\PY{o}{(}\PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{Session\PYZus{}\PYZob{}Guid.NewGuid()\PYZcb{}}\PY{l+s}{\PYZdq{}}\PY{o}{)}\PY{o}{;}
+
+        \PY{k}{let} \PY{n+nv}{keywords} \PY{o}{:} \PY{k+kt}{uint64} \PY{o}{=} \PY{k+kt}{uint64}\PY{o}{(}\PY{n+nn}{ClrTraceEventParser}\PY{p}{.}\PY{n+nn}{Keywords}\PY{p}{.}\PY{n}{All}\PY{o}{)} 
+
+        \PY{n}{traceEventSession}\PY{o}{.}\PY{n}{EnableKernelProvider}\PY{o}{(}\PY{n+nn}{KernelTraceEventParser}\PY{p}{.}\PY{n+nn}{Keywords}\PY{p}{.}\PY{n}{All}\PY{o}{,} \PY{n+nn}{KernelTraceEventParser}\PY{p}{.}\PY{n+nn}{Keywords}\PY{p}{.}\PY{n}{None}\PY{o}{)} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+        \PY{n}{traceEventSession}\PY{o}{.}\PY{n}{EnableProvider}\PY{o}{(}\PY{n+nn}{ClrTraceEventParser}\PY{p}{.}\PY{n}{ProviderGuid}\PY{o}{,} \PY{n+nn}{TraceEventLevel}\PY{p}{.}\PY{n}{Verbose}\PY{o}{,} \PY{n}{keywords}\PY{o}{)}             \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+        \PY{c+c1}{// Once the pertinent providers are enabled, create the trace log event source. }
+        \PY{k}{let} \PY{n+nv}{traceLogEventSource} \PY{o}{=} \PY{n+nn}{TraceLog}\PY{p}{.}\PY{n}{CreateFromTraceEventSession} \PY{n}{traceEventSession}
+
+        \PY{c+c1}{// Add all the necessary callbacks.}
+        \PY{n}{traceLogEventSource}\PY{o}{.}\PY{n}{Clr}\PY{o}{.}\PY{n}{add\PYZus{}All}\PY{o}{(}\PY{n}{callbackForAllEvents} \PY{n}{processId}\PY{o}{)}    \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+        \PY{n}{traceLogEventSource}\PY{o}{.}\PY{n}{Kernel}\PY{o}{.}\PY{n}{add\PYZus{}All}\PY{o}{(}\PY{n}{callbackForAllEvents} \PY{n}{processId}\PY{o}{)} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+        \PY{c+c1}{// TODO: Enable the GLAD events \PYZhy{} only available for real time processing.}
+        \PY{c+c1}{// ala: https://devblogs.microsoft.com/dotnet/556\PYZhy{}2/}
+        \PY{n}{traceLogEventSource}\PY{o}{,} \PY{n}{traceEventSession}
+
+    \PY{c+c1}{// Linux / MacOS.}
+    \PY{k}{else}
+        \PY{k}{let} \PY{n+nv}{keywords} \PY{o}{:} \PY{k+kt}{int64} \PY{o}{=} \PY{k+kt}{int64}\PY{o}{(}\PY{n+nn}{ClrTraceEventParser}\PY{p}{.}\PY{n+nn}{Keywords}\PY{p}{.}\PY{n}{All}\PY{o}{)} 
+        \PY{k}{let} \PY{n+nv}{eventPipeProvider} \PY{o}{:} \PY{n}{EventPipeProvider} \PY{o}{=} 
+            \PY{n}{EventPipeProvider}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Microsoft\PYZhy{}Windows\PYZhy{}DotNETRuntime}\PY{l+s}{\PYZdq{}}\PY{o}{,} \PY{n+nn}{Tracing}\PY{p}{.}\PY{n+nn}{EventLevel}\PY{p}{.}\PY{n}{Informational}\PY{o}{,} \PY{n}{keywords}\PY{o}{)}
+        \PY{k}{let} \PY{n+nv}{providers} \PY{o}{=} \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{EventPipeProvider}\PY{o}{\PYZgt{}}\PY{n+nb+bp}{()}
+        \PY{n}{providers}\PY{o}{.}\PY{n}{Add} \PY{n}{eventPipeProvider}
+
+        \PY{c+c1}{// For the sake of simplicity, choose the first process available with the said name. }
+        \PY{k}{let} \PY{n+nv}{processId}        \PY{o}{=} \PY{n}{getProcessIdForProcessName} \PY{n}{processName}
+        \PY{k}{let} \PY{n+nv}{client}           \PY{o}{=} \PY{n}{DiagnosticsClient}\PY{o}{(}\PY{n}{processId}\PY{o}{)}
+        \PY{k}{let} \PY{n+nv}{eventPipeSession} \PY{o}{=} \PY{n}{client}\PY{o}{.}\PY{n}{StartEventPipeSession}\PY{o}{(}\PY{n}{providers}\PY{o}{,} \PY{k}{false}\PY{o}{)}
+        \PY{k}{let} \PY{n+nv}{source}           \PY{o}{=} \PY{k}{new} \PY{n}{EventPipeEventSource}\PY{o}{(}\PY{n}{eventPipeSession}\PY{o}{.}\PY{n}{EventStream}\PY{o}{)}
+
+        \PY{n}{source}\PY{o}{.}\PY{n}{Clr}\PY{o}{.}\PY{n}{add\PYZus{}All}\PY{o}{(}\PY{n}{callbackForAllEvents} \PY{n}{processId}\PY{o}{)}     \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+        \PY{n}{source}\PY{o}{.}\PY{n}{Kernel}\PY{o}{.}\PY{n}{add\PYZus{}All}\PY{o}{(}\PY{n}{callbackForAllEvents} \PY{n}{processId} \PY{o}{)} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+        \PY{n}{source}\PY{o}{,} \PY{n}{eventPipeSession}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    This function is a bit more involved and requires turning on the Kernel
+and Clr Providers for those type of events. The events will flow in via
+callbacks that are subscribed to via the \texttt{callbackForAllEvents}
+function. Finally, the \texttt{TraceEventDispatcher} that'll be used for
+callstack retrieval and the session that'll need to be disposed once the
+session ends else, we'll run into a session leak is returned.
+
+It is worth noting, to enable the Kernel provider, admin privileges are
+needed; this implies for real time processing in Windows, the process
+must be started with admin privileges.
+
+Finally, in the main program, the events are subscribed to in the
+following manner:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/Program.fs}
+ 
+ \PY{c+c1}{// Hard coded values for the sake of successful compilation.}
+ \PY{k}{let} \PY{n+nv}{processName} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Test.exe}\PY{l+s}{\PYZdq{}}
+ \PY{k}{let} \PY{n+nv}{processID}   \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
+ \PY{k}{let} \PY{n+nv}{parsedRules} \PY{o}{=} \PY{o}{[} \PY{n}{parseRule} \PY{l+s}{\PYZdq{}}\PY{l+s}{GC/AllocationTick.AllocationAmount \PYZgt{} 110000 : Print CallStack}\PY{l+s}{\PYZdq{}} \PY{o}{]}
+ 
+\PY{k}{let} \PY{n+nv}{startProcessingEvents}\PY{n+nb+bp}{()} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+    \PY{c+c1}{// If the trace log file is provided, use the Trace Log API to traverse through all events.}
+    \PY{k}{if} \PY{n}{containsTracePath} \PY{k}{then} 
+        \PY{k}{let} \PY{n+nv}{tracePathArgs} \PY{o}{=} \PY{n}{parsedCommandline}\PY{o}{.}\PY{n}{GetResult} \PY{n}{TracePath}
+        \PY{k}{let} \PY{n+nv}{traceLog} \PY{o}{=} \PY{n}{getTraceLogFromTracePath} \PY{n}{tracePathArgs}
+        \PY{k}{let} \PY{n+nv}{events} \PY{o}{=} \PY{n}{traceLog}\PY{o}{.}\PY{n}{Events} 
+        \PY{k}{let} \PY{n+nv}{eventNamesToFilter} \PY{o}{=} \PY{n}{parsedRules} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{List}\PY{p}{.}\PY{n}{map}\PY{o}{(}\PY{k}{fun} \PY{n}{r} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{r}\PY{o}{.}\PY{n}{Condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerEvent}\PY{o}{.}\PY{n}{ToString}\PY{n+nb+bp}{()}\PY{o}{)}
+
+        \PY{k}{let} \PY{n+nv}{applyRulesForAllEvents} \PY{o}{(}\PY{n}{events} \PY{o}{:} \PY{n}{TraceEvent} \PY{n}{seq}\PY{o}{)} \PY{o}{(}\PY{n}{rules} \PY{o}{:} \PY{n}{Rule} \PY{k+kt}{list}\PY{o}{)} \PY{o}{=} 
+            \PY{n}{events}
+            \PY{c+c1}{// Consider events with name of the process and if they contain the events defined in the rules.}
+            \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Seq}\PY{p}{.}\PY{n}{filter}\PY{o}{(}\PY{k}{fun} \PY{n}{e} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{e}\PY{o}{.}\PY{n}{ProcessID} \PY{o}{=} \PY{n}{processID} \PY{o}{\PYZam{}\PYZam{}} 
+                                    \PY{n}{eventNamesToFilter} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{List}\PY{p}{.}\PY{n}{contains}\PY{o}{(}\PY{n}{e}\PY{o}{.}\PY{n}{EventName}\PY{o}{)}\PY{o}{)}
+            \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Seq}\PY{p}{.}\PY{n}{iter}\PY{o}{(}\PY{k}{fun} \PY{n}{e} \PY{o}{\PYZhy{}\PYZgt{}} 
+                \PY{n}{rules}
+                \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{List}\PY{p}{.}\PY{n}{iter}\PY{o}{(}\PY{k}{fun} \PY{n}{rule} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{applyRule} \PY{n}{rule} \PY{n}{e} \PY{o}{)}\PY{o}{)}
+        \PY{n}{applyRulesForAllEvents} \PY{n}{events} \PY{n}{parsedRules}
+
+    \PY{c+c1}{// Else, start a Real Time Session.}
+    \PY{c+c1}{// Requires admin privileges}
+    \PY{k}{else}
+        \PY{k}{let} \PY{n+nv}{traceLogEventSource}\PY{o}{,} \PY{n}{session} \PY{o}{=} \PY{n}{getRealTimeSession} \PY{n}{processName} \PY{n}{parsedRules}
+        \PY{n+nn}{Console}\PY{p}{.}\PY{n+nn}{CancelKeyPress}\PY{p}{.}\PY{n}{Add}\PY{o}{(}\PY{k}{fun} \PY{n}{e} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{session}\PY{o}{.}\PY{n}{Dispose}\PY{n+nb+bp}{()} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore} \PY{o}{)}
+
+        \PY{n}{traceLogEventSource}\PY{o}{.}\PY{n}{Process}\PY{n+nb+bp}{()} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+        \PY{n+nb+bp}{()}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Note that the TraceLog API allows iteration through Events as if it is a
+plain-vanilla \texttt{seq\textless{}TraceEvent\textgreater{}} unlike the
+real time session that requires callback registration.
+
+The next step is to start applying rules and go into details about the
+implementation of the Action Engine and the different types of actions
+as well as the anomaly detection logic.
+
+\hypertarget{step-3-apply-rules}{%
+\subsection{Step 3: Apply Rules}\label{step-3-apply-rules}}
+
+\begin{figure}
+\centering
+\includegraphics{Images/Step3_ApplyRules.png}
+\caption{Step 3}
+\end{figure}
+
+Lastly, the logic that's responsible for applying the rule if the
+condition is met is added. The application of the rule for a particular
+\texttt{TraceEvent} instance and a Rule is to check if the condition
+specified in the rule matches and then invoking the action.
+
+The condition checking logic is as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Check if the name of the \texttt{TraceEvent} matches the condition of
+  the Rule.
+\item
+  Check if the property we want to match on is in the
+  \texttt{TraceEvent}.
+\item
+  Check if the condition matches based on the \texttt{TraceEvent} and
+  the rules conditions.
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/ActionEngine.fs}
+
+\PY{k}{open} \PY{n+nn}{System}
+\PY{k}{open} \PY{n+nn}{System.Linq}
+
+\PY{k}{let} \PY{n+nv}{applyRule} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+
+    \PY{c+c1}{// Helper fn checks if the condition is met for the traceEvent.}
+    \PY{k}{let} \PY{n+nv}{checkCondition} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=}
+        \PY{k}{let} \PY{n+nv}{condition} \PY{o}{:} \PY{n}{Condition} \PY{o}{=} \PY{n}{rule}\PY{o}{.}\PY{n}{Condition}
+
+        \PY{c+c1}{// Match the event name.}
+        \PY{k}{let} \PY{n+nv}{matchEventName} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=} 
+            \PY{n}{traceEvent}\PY{o}{.}\PY{n}{EventName} \PY{o}{=} \PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerEvent}
+        
+        \PY{c+c1}{// Check if the specified payload exists.}
+        \PY{k}{let} \PY{n+nv}{checkPayload} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=} 
+            \PY{k}{if} \PY{n}{traceEvent}\PY{o}{.}\PY{n}{PayloadNames}\PY{o}{.}\PY{n}{Contains} \PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty} \PY{k}{then} \PY{k}{true}
+            \PY{k}{else} \PY{k}{false}
+
+        \PY{c+c1}{// Early return if the payload is unavailable since it will except later if we let it slide. }
+        \PY{k}{if} \PY{o}{(} \PY{n}{checkPayload} \PY{n}{traceEvent} \PY{o}{)} \PY{o}{=} \PY{k}{false} \PY{k}{then} 
+            \PY{k}{false}
+        \PY{k}{else}
+            \PY{k}{let} \PY{n+nv}{payload} \PY{o}{:} \PY{k+kt}{double} \PY{o}{=} \PY{n+nn}{Double}\PY{p}{.}\PY{n}{Parse} \PY{o}{(}\PY{n}{traceEvent}\PY{o}{.}\PY{n}{PayloadByName}\PY{o}{(}\PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty}\PY{o}{)}\PY{o}{.}\PY{n}{ToString}\PY{n+nb+bp}{()}\PY{o}{)}
+
+            \PY{c+c1}{// Check if the condition matches.}
+            \PY{k}{let} \PY{n+nv}{checkConditionValue} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=}
+                \PY{k}{let} \PY{n+nv}{conditionalValue} \PY{o}{:} \PY{n}{ConditionalValue} \PY{o}{=} \PY{n}{rule}\PY{o}{.}\PY{n}{Condition}\PY{o}{.}\PY{n}{ConditionalValue}
+
+                \PY{k}{match} \PY{n}{conditionalValue} \PY{k}{with}
+                \PY{o}{|} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{Value} \PY{n}{value} \PY{o}{\PYZhy{}\PYZgt{}}
+                    \PY{k}{match} \PY{n}{condition}\PY{o}{.}\PY{n}{ConditionType} \PY{k}{with}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{Equal}              \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThan}        \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZgt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThanEqualTo} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThan}           \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThanEqualTo}    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{NotEqual}           \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{IsAnomaly}          \PY{o}{\PYZhy{}\PYZgt{}} \PY{k}{false} \PY{c+c1}{// This case should technically not be reached but adding it to prevent warnings.}
+                \PY{o}{|} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{AnomalyDetectionType} \PY{n}{anomalyDetectionType} \PY{o}{\PYZhy{}\PYZgt{}}
+                    \PY{k}{match} \PY{n}{anomalyDetectionType} \PY{k}{with}
+                    \PY{o}{|} \PY{n+nn}{AnomalyDetectionType}\PY{p}{.}\PY{n}{DetectIIDSpike} \PY{o}{\PYZhy{}\PYZgt{}}
+                        \PY{c+c1}{// We\PYZsq{}ll be going over this logic below. Right now simply return false.}
+                        \PY{k}{false}
+
+            \PY{c+c1}{// Match on Event Name, if the payload exists and the condition based on the trace event is met.}
+            \PY{n}{matchEventName} \PY{n}{traceEvent} \PY{o}{\PYZam{}\PYZam{}} \PY{n}{checkPayload} \PY{n}{traceEvent} \PY{o}{\PYZam{}\PYZam{}} \PY{n}{checkConditionValue} \PY{n}{rule} \PY{n}{traceEvent}
+
+            \PY{c+c1}{// ... =\PYZgt{} Apply Actions. }
+    \PY{n+nb+bp}{()}
+\end{Verbatim}
+\end{tcolorbox}
+
+    The simple ConditionType checks should be self-explanatory. The
+AnomalyDetection based approach, however, is a bit more involved. In
+general, for a point to be considered an anomaly, the context of
+``amongst which other values is that data point an anomaly'' is needed;
+this implies that the history of the TraceEvents immediately before the
+said point to check the condition for should be kept in memory. As an
+aside, \texttt{Microsoft.ML} and \texttt{Microsoft.ML.TimeSeries} are
+the two nuget packages that are used for anomaly detection computation.
+
+To accommodate this logic, a rolling window of the last `n - 1' points
+before the TraceEvent in question should be made available at the time
+of the anomaly detection computation. The implementation of the
+abstraction involves a queue with a capacity and an eviction policy that
+dequeues the oldest element and enqueues the incoming element if the
+queue is at capacity. This abstraction is named \texttt{FixedSizeQueue}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/AnomalyDetection/Service.fs}
+
+\PY{k}{open} \PY{n+nn}{System}
+\PY{k}{open} \PY{n+nn}{System.Collections.Concurrent}
+
+\PY{k}{type} \PY{n+nc}{FixedSizeQueue}\PY{o}{\PYZlt{}}\PY{k}{\PYZsq{}}\PY{n}{T}\PY{o}{\PYZgt{}} \PY{o}{(}\PY{n}{capacity} \PY{o}{:} \PY{n}{int}\PY{o}{)} \PY{o}{=}
+    \PY{c+c1}{// Concurrency might not be necessary but better to be safe than sorry.}
+    \PY{k}{let} \PY{n+nv}{queue} \PY{o}{=} \PY{n}{ConcurrentQueue}\PY{o}{\PYZlt{}}\PY{k}{\PYZsq{}}\PY{n}{T}\PY{o}{\PYZgt{}}\PY{n+nb+bp}{()}
+
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{Capacity} \PY{o}{:} \PY{n}{int} \PY{o}{=} \PY{n}{capacity}
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{Count}    \PY{o}{:} \PY{n}{int} \PY{o}{=} \PY{n}{queue}\PY{o}{.}\PY{n}{Count}
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{Print}\PY{n+nb+bp}{()} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+        \PY{k}{let} \PY{n+nv}{stringRepr} \PY{o}{:} \PY{k+kt}{string} \PY{o}{=} \PY{n+nn}{String}\PY{p}{.}\PY{n}{Join}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{,}\PY{l+s}{\PYZdq{}}\PY{o}{,} \PY{n}{queue}\PY{o}{.}\PY{n}{ToArray}\PY{n+nb+bp}{()}\PY{o}{)}
+        \PY{n}{printfn} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZpc{}A}\PY{l+s}{\PYZdq{}} \PY{n}{stringRepr}
+
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{Insert} \PY{o}{(}\PY{n}{item} \PY{o}{:} \PY{k}{\PYZsq{}}\PY{n}{T}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+        \PY{c+c1}{// If we are at capacity, evict the first item.}
+        \PY{k}{if} \PY{n}{queue}\PY{o}{.}\PY{n}{Count} \PY{o}{=} \PY{n}{capacity} \PY{k}{then} 
+            \PY{n}{queue}\PY{o}{.}\PY{n}{TryDequeue}\PY{n+nb+bp}{()} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+            
+        \PY{c+c1}{// Enqueue the new item to the list.}
+        \PY{n}{queue}\PY{o}{.}\PY{n}{Enqueue}\PY{o}{(}\PY{n}{item}\PY{o}{)}
+
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{GetAll}\PY{n+nb+bp}{()} \PY{o}{:} \PY{n}{seq}\PY{o}{\PYZlt{}}\PY{k}{\PYZsq{}}\PY{n}{T}\PY{o}{\PYZgt{}} \PY{o}{=} 
+        \PY{n}{queue}
+\end{Verbatim}
+\end{tcolorbox}
+
+    The abstraction that is responsible for the orchestration of the
+retrieval of the last `n' events will maintain a \texttt{FixedSizeQueue}
+for each rule. Before defining the said service, the Anomaly Detection
+domain must be defined. To keep things as simple as possible, an anomaly
+detection algorithm takes in a \texttt{Context} and a \texttt{Result}
+returned.
+
+The \texttt{Context} will, therefore, have to consist of details about
+the point in question and the associated Rule. The output would be a
+result indicating if the point is an anomaly and the confidence with
+which the algorithm believes the point is an anomaly. The input will
+consist of the payload value and the associated timestamp.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Domain.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Microsoft.ML}\PY{l+s}{\PYZdq{}}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.ML.Data}
+
+\PY{k}{type} \PY{n+nc}{AnomalyDetectionInput}\PY{n+nb+bp}{()} \PY{o}{=}
+    \PY{o}{[\PYZlt{}}\PY{n}{DefaultValue}\PY{o}{\PYZgt{}]}
+    \PY{o}{[\PYZlt{}}\PY{n}{LoadColumn}\PY{o}{(}\PY{l+m+mi}{0}\PY{o}{)}\PY{o}{\PYZgt{}]}
+    \PY{k}{val} \PY{k}{mutable} \PY{k}{public} \PY{n}{timestamp} \PY{o}{:} \PY{k+kt}{double} 
+
+    \PY{o}{[\PYZlt{}}\PY{n}{DefaultValue}\PY{o}{\PYZgt{}]}
+    \PY{o}{[\PYZlt{}}\PY{n}{LoadColumn}\PY{o}{(}\PY{l+m+mi}{1}\PY{o}{)}\PY{o}{\PYZgt{}]}
+    \PY{k}{val} \PY{k}{mutable} \PY{k}{public} \PY{n}{value} \PY{o}{:} \PY{k+kt}{float32} 
+
+\PY{k}{type} \PY{n+nc}{AnomalyDetectionContext} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{Rule}  \PY{o}{:} \PY{n}{Rule} 
+      \PY{n}{Input} \PY{o}{:} \PY{n}{AnomalyDetectionInput} \PY{o}{\PYZcb{}}
+\PY{k}{type} \PY{n+nc}{AnomalyDetectionResult} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{Context}   \PY{o}{:} \PY{n}{AnomalyDetectionContext}
+      \PY{n}{IsAnomaly} \PY{o}{:} \PY{k+kt}{bool}
+      \PY{n}{PValue}    \PY{o}{:} \PY{k+kt}{double} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    Now that we have the Anomaly Detection domain defined, the service
+mentioned before that'll retrieve the fixed size queue can be
+implemented.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/AnomalyDetection/Service.fs}
+
+\PY{k}{open} \PY{n+nn}{System}
+\PY{k}{open} \PY{n+nn}{System.Collections.Concurrent}
+
+\PY{k}{type} \PY{n+nc}{AnomalyDetectionContextService}\PY{o}{(}\PY{n}{capacity} \PY{o}{:} \PY{n}{int}\PY{o}{)} \PY{o}{=} 
+    \PY{c+c1}{// Keyed on the Rule Id and Value is a FixedSizeQueueForTraceEvents.}
+    \PY{c+c1}{// Each Rule that has Anomaly Detection associated with it must have its own Fixed Size Queue.}
+    \PY{k}{let} \PY{n+nv}{cache} \PY{o}{=} \PY{n}{ConcurrentDictionary}\PY{o}{\PYZlt{}}\PY{n}{Guid}\PY{o}{,} \PY{n}{FixedSizeQueue}\PY{o}{\PYZlt{}}\PY{n}{AnomalyDetectionInput}\PY{o}{\PYZgt{}}\PY{o}{\PYZgt{}}\PY{n+nb+bp}{()}
+
+    \PY{k}{static} \PY{k}{member} \PY{n}{AnomalyPValueHistoryLength} \PY{o}{:} \PY{n}{int}    \PY{o}{=} \PY{l+m+mi}{30}
+    \PY{k}{static} \PY{k}{member} \PY{n}{AnomalyConfidence}          \PY{o}{:} \PY{k+kt}{double} \PY{o}{=} \PY{l+m+mi}{95}\PY{o}{.}
+
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{Upsert} \PY{o}{(}\PY{n}{ruleId} \PY{o}{:} \PY{n}{Guid}\PY{o}{)} \PY{o}{(}\PY{n}{item} \PY{o}{:} \PY{n}{AnomalyDetectionInput}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+        \PY{k}{let} \PY{n+nv}{queueExists}\PY{o}{,} \PY{n}{queue} \PY{o}{=} \PY{n}{cache}\PY{o}{.}\PY{n}{TryGetValue} \PY{n}{ruleId}
+        \PY{k}{match} \PY{n}{queueExists}\PY{o}{,} \PY{n}{queue} \PY{k}{with}
+        \PY{o}{|} \PY{k}{true}\PY{o}{,} \PY{n}{q}  \PY{o}{\PYZhy{}\PYZgt{}} 
+            \PY{n}{q}\PY{o}{.}\PY{n}{Insert} \PY{n}{item}
+        \PY{o}{|} \PY{k}{false}\PY{o}{,} \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} 
+            \PY{n}{cache}\PY{o}{.}\PY{o}{[}\PY{n}{ruleId}\PY{o}{]} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{FixedSizeQueue}\PY{o}{(} \PY{n}{capacity} \PY{o}{)}
+            \PY{n}{cache}\PY{o}{.}\PY{o}{[}\PY{n}{ruleId}\PY{o}{]}\PY{o}{.}\PY{n}{Insert} \PY{n}{item}
+
+    \PY{k}{member} \PY{n}{this}\PY{p}{.}\PY{n+nf}{TryRetrieve}\PY{o}{(}\PY{n}{ruleId} \PY{o}{:} \PY{n}{Guid}\PY{o}{)} \PY{o}{:} \PY{n}{AnomalyDetectionInput} \PY{n}{seq} \PY{n}{option} \PY{o}{=} 
+        \PY{k}{let} \PY{n+nv}{queueExists}\PY{o}{,} \PY{n}{queue} \PY{o}{=} \PY{n}{cache}\PY{o}{.}\PY{n}{TryGetValue} \PY{n}{ruleId}
+        \PY{k}{match} \PY{n}{queueExists}\PY{o}{,} \PY{n}{queue} \PY{k}{with}
+        \PY{o}{|} \PY{k}{true}\PY{o}{,} \PY{n}{q}  \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{Some} \PY{o}{(}\PY{n}{q}\PY{o}{.}\PY{n}{GetAll}\PY{n+nb+bp}{()}\PY{o}{)}
+        \PY{o}{|} \PY{k}{false}\PY{o}{,} \PY{o}{\PYZus{}} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{None}
+\end{Verbatim}
+\end{tcolorbox}
+
+    The one Anomaly Detection algorithm implemented is that of
+\href{https://github.com/dotnet/machinelearning/blob/510f0112d4fbb4d3ee233b9ca95c83fae1f9da91/src/Microsoft.ML.TimeSeries/IidSpikeDetector.cs}{Independent
+and Identically Distributed Spike Detector} from
+\texttt{Microsoft.ML.TimeSeries} that makes use of adaptive kernel
+density estimation to compute p-values to decide how much of an anomaly
+a certain point is.
+
+The computation of the kernel p-value can be found
+\href{https://github.com/dotnet/machinelearning/blob/510f0112d4fbb4d3ee233b9ca95c83fae1f9da91/src/Microsoft.ML.TimeSeries/SequentialAnomalyDetectionTransformBase.cs\#L475}{here}.
+To be put as simply as possible, the difference of the value of the
+point in question and all other points in the fixed size queue is
+computed and we consider a point an anomaly if there is a huge
+difference. Of course, I am trivializing the details, however, my
+intention here is to highlight the intuition more than the gory
+statistical details.
+
+Now that all ducks in a row with regard to the Anomaly Detection
+computation, the rest of the implementation is the following:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/AnomalyDetection/IIDSpike.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Microsoft.ML.TimeSeries}\PY{l+s}{\PYZdq{}}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.ML}
+\PY{k}{open} \PY{n+nn}{Microsoft.ML.Data}
+\PY{k}{open} \PY{n+nn}{Microsoft.ML.Transforms.TimeSeries}
+\PY{k}{open} \PY{n+nn}{System.Collections.Generic}
+
+\PY{k}{open} \PY{n+nn}{System.Linq}
+
+\PY{k}{let} \PY{n+nv}{ctx} \PY{o}{:} \PY{n}{MLContext} \PY{o}{=} \PY{n}{MLContext}\PY{n+nb+bp}{()}
+
+\PY{k}{type} \PY{n+nc}{Prediction}\PY{n+nb+bp}{()} \PY{o}{=} 
+    \PY{o}{[\PYZlt{}}\PY{n}{DefaultValue}\PY{o}{\PYZgt{}]}
+    \PY{o}{[\PYZlt{}}\PY{n}{VectorType}\PY{o}{(}\PY{l+m+mi}{3}\PY{o}{)}\PY{o}{\PYZgt{}]} \PY{c+c1}{// prediction i.e. 0/1 + value i.e. payload + p\PYZhy{}value}
+    \PY{k}{val} \PY{k}{mutable} \PY{k}{public} \PY{n}{Prediction} \PY{o}{:} \PY{k+kt}{double}\PY{n+nb+bp}{[]}
+
+\PY{k}{let} \PY{n+nv}{getAnomaliesUsingIIDSpikeEstimation} \PY{o}{(}\PY{n}{input} \PY{o}{:} \PY{n}{AnomalyDetectionContext}\PY{o}{)} 
+                                        \PY{o}{(}\PY{n}{service} \PY{o}{:} \PY{n}{AnomalyDetectionContextService}\PY{o}{)} 
+                                        \PY{o}{:} \PY{n}{AnomalyDetectionResult} \PY{o}{=}
+    \PY{k}{let} \PY{n+nv}{retrievedInput} \PY{o}{=} \PY{n}{service}\PY{o}{.}\PY{n}{TryRetrieve} \PY{n}{input}\PY{o}{.}\PY{n}{Rule}\PY{o}{.}\PY{n}{Id} 
+    \PY{k}{let} \PY{n+nv}{buffer} \PY{o}{=}          
+        \PY{k}{match} \PY{n}{retrievedInput} \PY{k}{with}
+        \PY{o}{|} \PY{n}{Some} \PY{n}{b} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{b} 
+        \PY{o}{|} \PY{n}{None}   \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{failwith} \PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{Failed to look up Anomaly Detection Buffer for rule: \PYZob{}input.Rule.InputRule\PYZcb{}}\PY{l+s}{\PYZdq{}} 
+
+    \PY{k}{let} \PY{n+nv}{dataView} \PY{o}{=} 
+        \PY{n}{ctx}\PY{o}{.}\PY{n}{Data}\PY{o}{.}\PY{n}{LoadFromEnumerable}\PY{o}{\PYZlt{}}\PY{n}{AnomalyDetectionInput}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{n}{buffer}\PY{o}{)}
+        
+    \PY{c+c1}{// If p\PYZhy{}value \PYZlt{} (1 \PYZhy{} confidence / 100.0) \PYZhy{}\PYZgt{} Alert i.e. anomaly.}
+    \PY{k}{let} \PY{n+nv}{anomalyPipeline} \PY{o}{:} \PY{n}{IidSpikeEstimator} \PY{o}{=}
+        \PY{n}{ctx}\PY{o}{.}\PY{n}{Transforms}\PY{o}{.}\PY{n}{DetectIidSpike}\PY{o}{(}
+        \PY{n}{outputColumnName}    \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Prediction}\PY{l+s}{\PYZdq{}}\PY{o}{,}
+        \PY{n}{inputColumnName}     \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{value}\PY{l+s}{\PYZdq{}}\PY{o}{,}
+        \PY{n}{side}                \PY{o}{=} \PY{n+nn}{AnomalySide}\PY{p}{.}\PY{n}{Positive}\PY{o}{,}
+        \PY{n}{confidence}          \PY{o}{=} \PY{n+nn}{AnomalyDetectionContextService}\PY{p}{.}\PY{n}{AnomalyConfidence}\PY{o}{,}  \PY{c+c1}{//  Alert Threshold = 1 \PYZhy{} options.Confidence / 100;}
+        \PY{n}{pvalueHistoryLength} \PY{o}{=} \PY{n+nn}{AnomalyDetectionContextService}\PY{p}{.}\PY{n}{AnomalyPValueHistoryLength} \PY{o}{)}
+
+    \PY{c+c1}{// For this model, fitting doesn\PYZsq{}t matter.}
+    \PY{k}{let} \PY{n+nv}{trainedAnomalyModel} \PY{o}{:} \PY{n}{IidSpikeDetector} 
+        \PY{o}{=} \PY{n}{anomalyPipeline}\PY{o}{.}\PY{n}{Fit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n}{Data}\PY{o}{.}\PY{n}{LoadFromEnumerable}\PY{o}{(}\PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{AnomalyDetectionInput}\PY{o}{\PYZgt{}}\PY{n+nb+bp}{()}\PY{o}{)}\PY{o}{)}
+    \PY{k}{let} \PY{n+nv}{transformedAnomalyData} \PY{o}{:} \PY{n}{IDataView} 
+        \PY{o}{=} \PY{n}{trainedAnomalyModel}\PY{o}{.}\PY{n}{Transform}\PY{o}{(}\PY{n}{dataView}\PY{o}{)}
+    \PY{k}{let} \PY{n+nv}{anomalies} \PY{o}{:} \PY{n}{Prediction} \PY{n}{seq} \PY{o}{=} 
+        \PY{n}{ctx}\PY{o}{.}\PY{n}{Data}\PY{o}{.}\PY{n}{CreateEnumerable}\PY{o}{\PYZlt{}}\PY{n}{Prediction}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{n}{transformedAnomalyData}\PY{o}{,} \PY{n}{reuseRowObject} \PY{o}{=} \PY{k}{false}\PY{o}{)}
+
+    \PY{c+c1}{// Last one in the buffer since it\PYZsq{}s the most recent one. }
+    \PY{k}{let} \PY{n+nv}{inputPoint} \PY{o}{=} \PY{n}{anomalies}\PY{o}{.}\PY{n}{Last}\PY{n+nb+bp}{()}
+    \PY{o}{\PYZob{}} \PY{n}{Context}   \PY{o}{=} \PY{n}{input} 
+      \PY{n}{IsAnomaly} \PY{o}{=} \PY{n}{inputPoint}\PY{o}{.}\PY{n}{Prediction}\PY{o}{[}\PY{l+m+mi}{0}\PY{o}{]} \PY{o}{=} \PY{l+m+mi}{1}
+      \PY{n}{PValue}    \PY{o}{=} \PY{n}{inputPoint}\PY{o}{.}\PY{n}{Prediction}\PY{o}{[}\PY{l+m+mi}{2}\PY{o}{]} \PY{o}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    Tying the anomaly detection computation all together with the rest of
+the condition matching logic:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/ActionEngine.fs}
+
+\PY{k}{let} \PY{n+nv}{anomalyDetectionContextService} \PY{o}{:} \PY{n}{AnomalyDetectionContextService} \PY{o}{=} 
+    \PY{n}{AnomalyDetectionContextService}\PY{o}{(}\PY{n+nn}{AnomalyDetectionContextService}\PY{p}{.}\PY{n}{AnomalyPValueHistoryLength}\PY{o}{)}
+
+\PY{k}{let} \PY{n+nv}{applyRule} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+
+    \PY{c+c1}{// Helper fn checks if the condition is met for the traceEvent.}
+    \PY{k}{let} \PY{n+nv}{checkCondition} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=}
+        \PY{k}{let} \PY{n+nv}{condition} \PY{o}{:} \PY{n}{Condition} \PY{o}{=} \PY{n}{rule}\PY{o}{.}\PY{n}{Condition}
+
+        \PY{c+c1}{// Match the event name.}
+        \PY{k}{let} \PY{n+nv}{matchEventName} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=} 
+            \PY{n}{traceEvent}\PY{o}{.}\PY{n}{EventName} \PY{o}{=} \PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerEvent}
+        
+        \PY{c+c1}{// Check if the specified payload exists.}
+        \PY{k}{let} \PY{n+nv}{checkPayload} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=} 
+            \PY{k}{if} \PY{n}{traceEvent}\PY{o}{.}\PY{n}{PayloadNames}\PY{o}{.}\PY{n}{Contains} \PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty} \PY{k}{then} \PY{k}{true}
+            \PY{k}{else} \PY{k}{false}
+
+        \PY{c+c1}{// Early return if the payload is unavailable since it will except later if we let it slide. }
+        \PY{k}{if} \PY{o}{(} \PY{n}{checkPayload} \PY{n}{traceEvent} \PY{o}{)} \PY{o}{=} \PY{k}{false} \PY{k}{then} 
+            \PY{k}{false}
+        \PY{k}{else}
+            \PY{k}{let} \PY{n+nv}{payload} \PY{o}{:} \PY{k+kt}{double} \PY{o}{=} \PY{n+nn}{Double}\PY{p}{.}\PY{n}{Parse} \PY{o}{(}\PY{n}{traceEvent}\PY{o}{.}\PY{n}{PayloadByName}\PY{o}{(}\PY{n}{condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty}\PY{o}{)}\PY{o}{.}\PY{n}{ToString}\PY{n+nb+bp}{()}\PY{o}{)}
+
+            \PY{c+c1}{// Add the new data point to the anomaly detection dict.}
+            \PY{k}{let} \PY{n+nv}{anomalyDetectionInput} \PY{o}{:} \PY{n}{AnomalyDetectionInput} \PY{o}{=} 
+                \PY{n}{AnomalyDetectionInput}\PY{o}{(}\PY{n}{timestamp} \PY{o}{=} \PY{n}{traceEvent}\PY{o}{.}\PY{n}{TimeStampRelativeMSec}\PY{o}{,} \PY{n}{value} \PY{o}{=} \PY{k+kt}{float32}\PY{o}{(}\PY{n}{payload}\PY{o}{)}\PY{o}{)}
+            \PY{n}{anomalyDetectionContextService}\PY{o}{.}\PY{n}{Upsert} \PY{n}{rule}\PY{o}{.}\PY{n}{Id} \PY{n}{anomalyDetectionInput} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+            \PY{c+c1}{// Check if the condition matches.}
+            \PY{k}{let} \PY{n+nv}{checkConditionValue} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{bool} \PY{o}{=}
+                \PY{k}{let} \PY{n+nv}{conditionalValue} \PY{o}{:} \PY{n}{ConditionalValue} \PY{o}{=} \PY{n}{rule}\PY{o}{.}\PY{n}{Condition}\PY{o}{.}\PY{n}{ConditionalValue}
+
+                \PY{k}{match} \PY{n}{conditionalValue} \PY{k}{with}
+                \PY{o}{|} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{Value} \PY{n}{value} \PY{o}{\PYZhy{}\PYZgt{}}
+                    \PY{k}{match} \PY{n}{condition}\PY{o}{.}\PY{n}{ConditionType} \PY{k}{with}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{Equal}              \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThan}        \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZgt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{GreaterThanEqualTo} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThan}           \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{LessThanEqualTo}    \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{NotEqual}           \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{payload} \PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}} \PY{n}{value}
+                    \PY{o}{|} \PY{n+nn}{ConditionType}\PY{p}{.}\PY{n}{IsAnomaly}          \PY{o}{\PYZhy{}\PYZgt{}} \PY{k}{false} \PY{c+c1}{// This case should technically not be reached but adding it to prevent warnings.}
+                \PY{o}{|} \PY{n+nn}{ConditionalValue}\PY{p}{.}\PY{n}{AnomalyDetectionType} \PY{n}{anomalyDetectionType} \PY{o}{\PYZhy{}\PYZgt{}}
+                    \PY{k}{match} \PY{n}{anomalyDetectionType} \PY{k}{with}
+                    \PY{o}{|} \PY{n+nn}{AnomalyDetectionType}\PY{p}{.}\PY{n}{DetectIIDSpike} \PY{o}{\PYZhy{}\PYZgt{}}
+                        \PY{k}{let} \PY{n+nv}{context} \PY{o}{=} \PY{o}{\PYZob{}} \PY{n}{Rule} \PY{o}{=} \PY{n}{rule}\PY{o}{;} \PY{n}{Input} \PY{o}{=} \PY{n}{anomalyDetectionInput} \PY{o}{\PYZcb{}}
+                        \PY{k}{let} \PY{n+nv}{result}  \PY{o}{=} \PY{n}{getAnomaliesUsingIIDSpikeEstimation} \PY{n}{context} \PY{n}{anomalyDetectionContextService} 
+                        \PY{n}{result}\PY{o}{.}\PY{n}{IsAnomaly}
+
+            \PY{c+c1}{// Match on Event Name, if the payload exists and the condition based on the trace event is met.}
+            \PY{n}{matchEventName} \PY{n}{traceEvent} \PY{o}{\PYZam{}\PYZam{}} \PY{n}{checkPayload} \PY{n}{traceEvent} \PY{o}{\PYZam{}\PYZam{}} \PY{n}{checkConditionValue} \PY{n}{rule} \PY{n}{traceEvent}
+
+    \PY{n+nb+bp}{()}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Next, the Action implementation logic is added. The actions that are
+implemented are the following:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}@{}}
+\toprule
+Name of Action Type & Description \\
+\midrule
+\endhead
+1. Alert & Alerting Mechanism that'll print out pertinent details about
+the rule invoked and why it was invoked. \\
+2. Callstack & If a call stack is available, it will be printed out on
+the console. \\
+3. Chart & A chart of data points preceding and including the one that
+triggered the condition of the rule is generated and rendered as an html
+file \\
+\bottomrule
+\end{longtable}
+
+Alerts are fairly straight forward and are implemented in the following
+manner using the \texttt{Spectre.Console} library for it's aesthetic
+appeal:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Actions/Alerts.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Spectre.Console}\PY{l+s}{\PYZdq{}}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing}
+\PY{k}{open} \PY{n+nn}{Spectre.Console}
+
+\PY{c+c1}{// Added this back to distinguish between this Rule and the open imported from}
+\PY{c+c1}{// opening up Spectre.Console.}
+\PY{k}{type} \PY{n+nc}{Rule} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{Id}           \PY{o}{:} \PY{n}{Guid}
+      \PY{n}{Condition}    \PY{o}{:} \PY{n}{Condition}
+      \PY{n}{Action}       \PY{o}{:} \PY{n}{Action} 
+      \PY{n}{InputRule}    \PY{o}{:} \PY{k+kt}{string} \PY{o}{\PYZcb{}}
+
+\PY{k}{let} \PY{n+nv}{printAlert} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+
+    \PY{c+c1}{// Create a table}
+    \PY{k}{let} \PY{n+nv}{table} \PY{o}{=} \PY{n+nn}{Spectre}\PY{p}{.}\PY{n+nn}{Console}\PY{p}{.}\PY{n}{Table}\PY{n+nb+bp}{()}\PY{o}{;}
+    \PY{n}{table}\PY{o}{.}\PY{n}{Title} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nn}{Spectre}\PY{p}{.}\PY{n+nn}{Console}\PY{p}{.}\PY{n}{TableTitle} \PY{l+s}{\PYZdq{}}\PY{l+s}{[underline red] Alert! [/]}\PY{l+s}{\PYZdq{}}
+
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddColumn}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Input Rule}\PY{l+s}{\PYZdq{}}\PY{o}{)}      \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddColumn}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Timestamp}\PY{l+s}{\PYZdq{}}\PY{o}{)}       \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddColumn}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Event Name}\PY{l+s}{\PYZdq{}}\PY{o}{)}      \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddColumn}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Event Property}\PY{l+s}{\PYZdq{}}\PY{o}{)}  \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddColumn}\PY{o}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Payload}\PY{l+s}{\PYZdq{}}\PY{o}{)}         \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+    \PY{n}{table}\PY{o}{.}\PY{n}{AddRow}\PY{o}{(} \PY{n}{rule}\PY{o}{.}\PY{n}{InputRule}\PY{o}{,} 
+                  \PY{n}{traceEvent}\PY{o}{.}\PY{n}{TimeStampRelativeMSec}\PY{o}{.}\PY{n}{ToString}\PY{n+nb+bp}{()}\PY{o}{,} 
+                  \PY{n}{traceEvent}\PY{o}{.}\PY{n}{EventName}\PY{o}{,}
+                  \PY{n}{rule}\PY{o}{.}\PY{n}{Condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty}\PY{o}{,}
+                  \PY{n}{traceEvent}\PY{o}{.}\PY{n}{PayloadByName}\PY{o}{(}\PY{n}{rule}\PY{o}{.}\PY{n}{Condition}\PY{o}{.}\PY{n}{Conditioner}\PY{o}{.}\PY{n}{ConditionerProperty}\PY{o}{)}\PY{o}{.}\PY{n}{ToString}\PY{n+nb+bp}{()} \PY{o}{)} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+    \PY{n}{table}\PY{o}{.}\PY{n}{Border} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nn}{Spectre}\PY{p}{.}\PY{n+nn}{Console}\PY{p}{.}\PY{n+nn}{TableBorder}\PY{p}{.}\PY{n}{Square}
+
+    \PY{c+c1}{// Render the table to the console}
+    \PY{n+nn}{Spectre}\PY{p}{.}\PY{n+nn}{Console}\PY{p}{.}\PY{n+nn}{AnsiConsole}\PY{p}{.}\PY{n}{Write}\PY{o}{(}\PY{n}{table}\PY{o}{)}\PY{o}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    For \textbf{Callstack} actions, symbol resolution is an important step
+and is highlighted below; a recursive function that walks the stack
+frame-by-frame and prints out the module and full method name after
+resolving symbols is used:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Actions/CallStack.fs}
+
+\PY{k}{open} \PY{n+nn}{System.IO}
+
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Tracing.Etlx}
+\PY{k}{open} \PY{n+nn}{Microsoft.Diagnostics.Symbols}
+
+\PY{k}{open} \PY{n+nn}{Spectre.Console}
+
+\PY{c+c1}{// Added this back to distinguish between this Rule and the open imported from}
+\PY{c+c1}{// opening up Spectre.Console.}
+\PY{k}{type} \PY{n+nc}{Rule} \PY{o}{=} 
+    \PY{o}{\PYZob{}} \PY{n}{Id}           \PY{o}{:} \PY{n}{Guid}
+      \PY{n}{Condition}    \PY{o}{:} \PY{n}{Condition}
+      \PY{n}{Action}       \PY{o}{:} \PY{n}{Action} 
+      \PY{n}{InputRule}    \PY{o}{:} \PY{k+kt}{string} \PY{o}{\PYZcb{}}
+
+\PY{k}{let} \PY{n+nv}{symbolReader} \PY{o}{:} \PY{n}{SymbolReader} \PY{o}{=} \PY{k}{new} \PY{n}{SymbolReader}\PY{o}{(}\PY{n+nn}{TextWriter}\PY{p}{.}\PY{n}{Null}\PY{o}{,} \PY{n+nn}{SymbolPath}\PY{p}{.}\PY{n}{SymbolPathFromEnvironment}\PY{o}{)}
+
+\PY{c+c1}{// Helper fn responsible for getting the call stack from a particular trace event.}
+\PY{k}{let} \PY{n+nv}{printCallStack} \PY{o}{(}\PY{n}{rule}\PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{traceEvent} \PY{o}{:} \PY{n}{TraceEvent}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+
+    \PY{k}{let} \PY{n+nv}{callStack} \PY{o}{=} \PY{n}{traceEvent}\PY{o}{.}\PY{n}{CallStack}\PY{n+nb+bp}{()}
+    \PY{k}{if} \PY{n}{isNull} \PY{n}{callStack} \PY{k}{then} 
+        \PY{n}{printfn} \PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{Rule: \PYZob{}rule.InputRule\PYZcb{} invoked for Event: \PYZob{}traceEvent\PYZcb{} however, the call stack associated with the event is null.}\PY{l+s}{\PYZdq{}} 
+        \PY{n+nb+bp}{()}
+
+    \PY{k}{let} \PY{n+nv}{root} \PY{o}{=} \PY{n}{Tree}\PY{o}{(}\PY{n}{Rule}\PY{o}{(}\PY{n}{rule}\PY{o}{.}\PY{n}{InputRule}\PY{o}{.}\PY{n}{EscapeMarkup}\PY{n+nb+bp}{()}\PY{o}{)}\PY{o}{)}
+
+    \PY{k}{let} \PY{n+nv}{printStackFrame} \PY{o}{(}\PY{n}{callStack} \PY{o}{:} \PY{n}{TraceCallStack}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+        \PY{k}{if} \PY{o+ow}{not} \PY{o}{(}\PY{n}{isNull} \PY{n}{callStack}\PY{o}{.}\PY{n}{CodeAddress}\PY{o}{.}\PY{n}{ModuleFile}\PY{o}{)}
+        \PY{k}{then}
+            \PY{n}{callStack}\PY{o}{.}\PY{n}{CodeAddress}\PY{o}{.}\PY{n}{CodeAddresses}\PY{o}{.}\PY{n}{LookupSymbolsForModule}\PY{o}{(}\PY{n}{symbolReader}\PY{o}{,} \PY{n}{callStack}\PY{o}{.}\PY{n}{CodeAddress}\PY{o}{.}\PY{n}{ModuleFile}\PY{o}{)}
+            \PY{k}{let} \PY{n+nv}{frameValue} \PY{o}{=} \PY{n}{sprintf} \PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZpc{}s!\PYZpc{}s}\PY{l+s}{\PYZdq{}} \PY{n}{callStack}\PY{o}{.}\PY{n}{CodeAddress}\PY{o}{.}\PY{n}{ModuleName} \PY{n}{callStack}\PY{o}{.}\PY{n}{CodeAddress}\PY{o}{.}\PY{n}{FullMethodName}
+            \PY{n}{root}\PY{o}{.}\PY{n}{AddNode} \PY{o}{(} \PY{n}{frameValue}\PY{o}{.}\PY{n}{EscapeMarkup}\PY{n+nb+bp}{()} \PY{o}{)} \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n}{ignore}
+
+    \PY{k}{let} \PY{n+nv}{rec} \PY{n}{processFrame} \PY{o}{(}\PY{n}{callStack} \PY{o}{:} \PY{n}{TraceCallStack}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=}
+        \PY{k}{if} \PY{n}{isNull} \PY{n}{callStack} \PY{k}{then} \PY{n+nb+bp}{()}
+        \PY{k}{else}
+            \PY{n}{printStackFrame} \PY{n}{callStack}
+            \PY{n}{processFrame} \PY{n}{callStack}\PY{o}{.}\PY{n}{Caller}
+    
+    \PY{n}{processFrame} \PY{n}{callStack}
+    \PY{n+nn}{AnsiConsole}\PY{p}{.}\PY{n}{Write} \PY{n}{root}
+    \PY{n}{printfn} \PY{l+s}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    An example of a printed callstack is the following:
+
+\begin{figure}
+\centering
+\includegraphics{Images/Example_Callstack.jpeg}
+\caption{Call Stack}
+\end{figure}
+
+It is worth noting that currently support for callstack resolution
+doesn't exist in its full capacity for Linux/MacOS.
+
+Lastly, charting is made possible using \texttt{FSharp.Plotly} in the
+following manner:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{// src/PerfAvore/PerfAvore.Console/RulesEngine/Actions/Chart.fs}
+
+\PY{o}{\PYZsh{}}\PY{n}{r} \PY{l+s}{\PYZdq{}}\PY{l+s}{nuget:Fsharp.Plotly}\PY{l+s}{\PYZdq{}}
+
+\PY{k}{open} \PY{n+nn}{System.Linq}
+\PY{k}{open} \PY{n+nn}{FSharp.Plotly}
+
+\PY{k}{let} \PY{n+nv}{printChart} \PY{o}{(}\PY{n}{rule} \PY{o}{:} \PY{n}{Rule}\PY{o}{)} \PY{o}{(}\PY{n}{service} \PY{o}{:} \PY{n}{AnomalyDetectionContextService}\PY{o}{)} \PY{o}{:} \PY{k+kt}{unit} \PY{o}{=} 
+
+    \PY{k}{let} \PY{n+nv}{v} \PY{o}{=} \PY{n}{service}\PY{o}{.}\PY{n}{TryRetrieve}\PY{o}{(}\PY{n}{rule}\PY{o}{.}\PY{n}{Id}\PY{o}{)}\PY{o}{.}\PY{n}{Value}
+    \PY{k}{let} \PY{n+nv}{x} \PY{o}{=} 
+        \PY{n}{v}
+        \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Seq}\PY{p}{.}\PY{n}{map}\PY{o}{(}\PY{k}{fun} \PY{n}{i} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{i}\PY{o}{.}\PY{n}{timestamp}\PY{o}{)}
+    \PY{k}{let} \PY{n+nv}{y} \PY{o}{=} 
+        \PY{n}{v}
+        \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Seq}\PY{p}{.}\PY{n}{map}\PY{o}{(}\PY{k}{fun} \PY{n}{i} \PY{o}{\PYZhy{}\PYZgt{}} \PY{n}{i}\PY{o}{.}\PY{n}{value}\PY{o}{)}
+    \PY{k}{let} \PY{n+nv}{input} \PY{o}{=} \PY{n+nn}{Seq}\PY{p}{.}\PY{n}{zip} \PY{n}{x} \PY{n}{y}
+    \PY{k}{let} \PY{n+nv}{point} \PY{o}{=} \PY{n}{v}\PY{o}{.}\PY{n}{Last}\PY{n+nb+bp}{()}
+    \PY{k}{let} \PY{n+nv}{scatterPoint} \PY{o}{=} \PY{n}{seq} \PY{o}{\PYZob{}} \PY{n}{point}\PY{o}{.}\PY{n}{timestamp}\PY{o}{,} \PY{n}{point}\PY{o}{.}\PY{n}{value} \PY{o}{\PYZcb{}}
+
+    \PY{o}{[}
+        \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{Line} \PY{o}{(}\PY{n}{input}\PY{o}{,} \PY{n}{Name} \PY{o}{=} \PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{Trend for \PYZob{}point.timestamp\PYZcb{}}\PY{l+s}{\PYZdq{}}\PY{o}{)} 
+        \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{Scatter} \PY{o}{(}\PY{n}{scatterPoint}\PY{o}{,} \PY{n}{mode} \PY{o}{=} \PY{n+nn}{StyleParam}\PY{p}{.}\PY{n+nn}{Mode}\PY{p}{.}\PY{n}{Markers}\PY{o}{,} \PY{n}{Name}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Anomaly Point}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+    \PY{o}{]}
+    \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{Combine}
+    \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{withX\PYZus{}AxisStyle}\PY{o}{(}\PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Relative Timestamp (ms)}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+    \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{withY\PYZus{}AxisStyle}\PY{o}{(}\PY{n}{title} \PY{o}{=} \PY{o}{\PYZdl{}}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZob{}rule.Condition.Conditioner.ConditionerProperty\PYZcb{}}\PY{l+s}{\PYZdq{}}\PY{o}{)}
+    \PY{o}{|}\PY{o}{\PYZgt{}} \PY{n+nn}{Chart}\PY{p}{.}\PY{n}{Show}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    An example of an chart is:
+
+\begin{figure}
+\centering
+\includegraphics{Images/Example_Charting.jpeg}
+\caption{Chart}
+\end{figure}
+
+    \hypertarget{how-to-run-perf-avore}{%
+\subsection{How To Run Perf Avore}\label{how-to-run-perf-avore}}
+
+Now that all the components of Perf Avore are covered, this section will
+cover how a user can run the Console App. Perf-Avore can be run by
+cd'ing into the \texttt{src/PerfAvore/PerfAvore.Console} directory and
+then:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{dotnet\ restore}
+\item
+  \texttt{dotnet\ run\ -\/-\ -\/-processname\ \textless{}ProcessName\textgreater{}\ {[}-\/-tracepath\ \textless{}TracePath\textgreater{}{]}\ {[}-\/-rulespath\ \textless{}RulesPath\textgreater{}{]}}.
+\end{enumerate}
+
+\hypertarget{command-line-arguments}{%
+\subsubsection{Command Line Arguments}\label{command-line-arguments}}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.50}}@{}}
+\toprule
+Command Line Option & Description \\
+\midrule
+\endhead
+\texttt{processname} & Name of the Process to analyze. This is the only
+mandatory parameter. \\
+\texttt{tracepath} & The path of the trace file (.ETL / .ETLX). The
+absence of this command line will trigger a real time session. Note: For
+real time sessions, admin privileges are required. \\
+\texttt{rulespath} & The path to a json file that contains a list of all
+the rules. By default, the \texttt{SampleRules.json} file will be used
+if this argument isn't specified. The location of this file is
+\texttt{src\textbackslash{}PerfAvore\textbackslash{}PerfAvore.Console\textbackslash{}SampleRules\textbackslash{}SampleRules.json}
+for Windows and
+\texttt{src\textbackslash{}PerfAvore\textbackslash{}PerfAvore.Console\textbackslash{}SampleRules\textbackslash{}LinuxSampleRules.json} \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{prototypes}{%
+\subsection{Prototypes}\label{prototypes}}
+
+Prior to writing this Console App, I prototyped functionality to test
+out smaller components that can be found
+\href{https://github.com/MokoSan/PerfAvore/tree/main/src/Prototypes}{here}.
+Some of the prototypes include:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \href{https://github.com/MokoSan/PerfAvore/blob/main/src/Prototypes/RuleEngineDSL.ipynb}{Rule
+  Engine based DSL Parsing}
+\item
+  \href{https://github.com/MokoSan/PerfAvore/blob/main/src/Prototypes/AnomalyDetection_TraceLog.ipynb}{Anomaly
+  Detection With Trace Log API}
+\item
+  \href{https://github.com/MokoSan/PerfAvore/blob/main/src/Prototypes/AnomalyDetection_ML.NET.ipynb}{Anomaly
+  Detection with ML.NET}
+\item
+  \href{https://github.com/MokoSan/PerfAvore/blob/main/src/Prototypes/PrototypingTraceLog.ipynb}{Prototyping
+  the Trace Log API}
+\end{enumerate}
+
+\hypertarget{testing}{%
+\subsection{Testing}\label{testing}}
+
+I tested the effectiveness with a rouge process given
+\href{https://github.com/MokoSan/PerfAvore/blob/main/src/PerfAvore/RougePrograms/TimedExcessiveAllocs/Program.cs}{here}
+that excessively allocates to both the SOH and the LOH on a timer and
+was able to get all the actions invoked.
+
+\hypertarget{conclusion}{%
+\subsection{Conclusion}\label{conclusion}}
+
+Finally, done! This submission took a lot of work and I feel I have a
+reasonable base to continue to build on top of. As a disclaimer, the
+project is still under development and is without unit tests.
+
+To reiterate:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Build a parser for a domain we defined that encapsulates details about
+  rules.
+\item
+  A mechanism to digest \texttt{TraceEvent} instances from a trace file
+  or real time process for Windows, Linux and MacOS systems.
+\item
+  Action invocation logic if the conditions of a rule are met.
+\end{enumerate}
+
+Would very much appreciate any feedback or suggestions that can improve
+the product or if you spot any mistakes! Building Perf Avore was an
+incredibly rewarding learning experience!
+
+Thanks to the organizers of \#fsadvent particularly,
+\href{https://twitter.com/sergey_tiho}{Sergey Tihon}! Happy Holidays to
+all!
+
+\hypertarget{tools-used}{%
+\subsection{Tools Used}\label{tools-used}}
+
+Perf Avore was developed on VSCode using the
+\href{https://github.com/ionide/ionide-vscode-fsharp}{ionide} plugin and
+dotnet cli.
+
+The version of dotnet used to develop is:
+
+\begin{verbatim}
+❯ dotnet --version
+6.0.100
+\end{verbatim}
+
+I tested the linux use case using WSL with the following version:
+
+\begin{verbatim}
+MokoSan:~:% lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 20.04 LTS
+Release:        20.04
+Codename:       focal
+\end{verbatim}
+
+\hypertarget{dependencies}{%
+\subsubsection{Dependencies}\label{dependencies}}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.68}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.32}}@{}}
+\toprule
+Dependency Name & Reasons \\
+\midrule
+\endhead
+Argu & Command line parsing \\
+FSharp.Plotly & Charting \\
+Microsoft.Diagnostics.NETCore.Client & Linux / MacOS Trace Event
+Support \\
+Microsoft.Diagnostics.Tracing.TraceEvent & Trace Event Support \\
+Microsoft.ML & Basic abstractions used for the Anomaly Detection side of
+things \\
+Microsoft.ML.TimeSeries & Anomaly Detection Algorithm \\
+Spectre.Console & Prettifying the Console \\
+System.Text.Json & Parsing the JSON rules file \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{next-steps}{%
+\subsubsection{Next Steps}\label{next-steps}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Added Unit Tests
+\item
+  Add the ability to create an Audit of all the Actions Invoked.
+\item
+  Clean up some of the interfaces and add more documentation.
+\end{enumerate}
+
+    \hypertarget{references}{%
+\subsection{References}\label{references}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \href{https://www.codesuji.com/2019/05/24/F-and-MLNet-Anomaly/}{Taking
+  Stock of Anomalies with F\# And ML.NET}
+\item
+  \href{https://lowleveldesign.org/2020/10/13/a-cpu-sampling-profiler-in-less-than-200-lines/}{A
+  CPU Sampling Profiler in Less Than 200 Lines}
+\item
+  \href{https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/phone-calls-anomaly-detection}{Tutorial:
+  Detect anomalies in time series with ML.NET}
+\item
+  \href{https://arxiv.org/pdf/1204.3251.pdf}{Plug-in martingales for
+  testing exchangeability on-line: arXiv:1204.3251}
+\item
+  \href{https://atlemann.github.io/fsharp/2021/12/11/fs-crypto.html}{Atle
+  Rudshaug's Submission of a Console App that helped me significantly
+  design my app}
+\item
+  \href{https://github.com/Maoni0/realmon/tree/main/src}{realmon}
+\end{enumerate}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

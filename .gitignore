@@ -256,3 +256,6 @@ paket-files/
 
 # Coverage Report
 MyProject_coverage.xml
+
+# Notebook Checkpoints
+.ipynb_checkpoints/
