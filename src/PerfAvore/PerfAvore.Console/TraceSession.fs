@@ -14,7 +14,7 @@ open RulesEngine.Domain
 open RulesEngine.ActionEngine
 open System.Diagnostics
 
-let getProcessIdForProcessName (processName : string) : int =
+let getProcessIdForProcessNameForRealTimeSessions (processName : string) : int =
         let processes = Process.GetProcessesByName(processName)
         if processes.Length < 1 then invalidArg processName $"No processes with name: {processName} exists."
         // For the sake of simplicity, choose the first process available with the said name. 
@@ -31,7 +31,7 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
             |> List.iter(fun rule ->
                 if processId = traceEvent.ProcessID then applyRule rule traceEvent))
 
-    let processId = getProcessIdForProcessName processName
+    let processId = getProcessIdForProcessNameForRealTimeSessions processName
 
     // Windows.
     if RuntimeInformation.IsOSPlatform OSPlatform.Windows then
@@ -62,7 +62,7 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
         providers.Add eventPipeProvider
 
         // For the sake of simplicity, choose the first process available with the said name. 
-        let processId        = getProcessIdForProcessName processName
+        let processId        = getProcessIdForProcessNameForRealTimeSessions processName
         let client           = DiagnosticsClient(processId)
         let eventPipeSession = client.StartEventPipeSession(providers, false)
         let source           = new EventPipeEventSource(eventPipeSession.EventStream)
