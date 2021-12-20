@@ -25,11 +25,13 @@ let getTraceLogFromTracePath (tracePath : string) : TraceLog =
 
 let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceEventDispatcher * IDisposable = 
 
-    let callbackForAllEvents : Action<TraceEvent> = 
+    let callbackForAllEvents (processId : int): Action<TraceEvent> = 
         Action<TraceEvent>(fun traceEvent -> 
             parsedRules
             |> List.iter(fun rule ->
-                if processName = traceEvent.ProcessName then applyRule rule traceEvent))
+                if processId = traceEvent.ProcessID then applyRule rule traceEvent))
+
+    let processId = getProcessIdForProcessName processName
 
     // Windows.
     if RuntimeInformation.IsOSPlatform OSPlatform.Windows then
@@ -44,8 +46,8 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
         let traceLogEventSource = TraceLog.CreateFromTraceEventSession traceEventSession
 
         // Add all the necessary callbacks.
-        traceLogEventSource.Clr.add_All(callbackForAllEvents)    |> ignore
-        traceLogEventSource.Kernel.add_All(callbackForAllEvents) |> ignore
+        traceLogEventSource.Clr.add_All(callbackForAllEvents processId)    |> ignore
+        traceLogEventSource.Kernel.add_All(callbackForAllEvents processId) |> ignore
 
         // TODO: Enable the GLAD events - only available for real time processing.
         // ala: https://devblogs.microsoft.com/dotnet/556-2/
@@ -65,7 +67,7 @@ let getRealTimeSession (processName : string) (parsedRules : Rule list) : TraceE
         let eventPipeSession = client.StartEventPipeSession(providers, false)
         let source           = new EventPipeEventSource(eventPipeSession.EventStream)
 
-        source.Clr.add_All(callbackForAllEvents)    |> ignore
-        source.Kernel.add_All(callbackForAllEvents) |> ignore
+        source.Clr.add_All(callbackForAllEvents processId)     |> ignore
+        source.Kernel.add_All(callbackForAllEvents processId ) |> ignore
 
         source, eventPipeSession
