@@ -24,6 +24,7 @@ let main argv =
 
     // Process Name is mandatory.
     let processName = parsedCommandline.GetResult ProcessName
+    let processId   = getProcessIdForProcessName processName
 
     let parsedRules : Rule list = 
         // Rules are needed, if not provided, fall back to the default rules.
@@ -49,7 +50,7 @@ let main argv =
         let applyRulesForAllEvents (events : TraceEvent seq) (rules : Rule list) = 
             events
             // Consider events with name of the process and if they contain the events defined in the rules.
-            |> Seq.filter(fun e -> e.ProcessName = processName  && 
+            |> Seq.filter(fun e -> e.ProcessID = processId && 
                                    eventNamesToFilter |> List.contains(e.EventName))
             |> Seq.iter(fun e -> 
                 rules
@@ -61,7 +62,6 @@ let main argv =
     else
         let traceLogEventSource, session = getRealTimeSession processName parsedRules
         Console.CancelKeyPress.Add(fun _ -> session.Dispose() |> ignore )
-
         traceLogEventSource.Process() |> ignore
         ()
 
