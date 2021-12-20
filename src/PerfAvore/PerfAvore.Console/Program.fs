@@ -11,6 +11,7 @@ open RulesEngine.Parser
 open RulesEngine.Domain
 open RulesEngine.ActionEngine
 open Microsoft.Diagnostics.Tracing
+open System.Runtime.InteropServices
 
 open JsonRuleFileReader
 
@@ -34,8 +35,12 @@ let main argv =
             |> List.map(parseRule)
         else
             // Fall back to the Sample Rules.
-            getJsonRulesFromFile (Path.Combine( __SOURCE_DIRECTORY__, "SampleRules", "SampleRules.json"))
-            |> List.map(parseRule)
+            if RuntimeInformation.IsOSPlatform OSPlatform.Windows then
+                getJsonRulesFromFile (Path.Combine( __SOURCE_DIRECTORY__, "SampleRules", "SampleRules.json"))
+                |> List.map(parseRule)
+            else
+                getJsonRulesFromFile (Path.Combine( __SOURCE_DIRECTORY__, "SampleRules", "LinuxSampleRules.json"))
+                |> List.map(parseRule)
 
     let containsTracePath : bool = parsedCommandline.Contains TracePath
 
