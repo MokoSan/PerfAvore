@@ -3,6 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <PackageVersion>1.0.1</PackageVersion>
+    <ToolCommandName>perfavore</ToolCommandName>
   </PropertyGroup>
 
   <ItemGroup>
