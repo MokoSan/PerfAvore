@@ -17,7 +17,7 @@ open JsonRuleFileReader
 
 [<EntryPoint>]
 let main argv =
-    AnsiConsole.MarkupLine("[underline green]Perf-Avore, The Rule Based Performance Analysis: MokoSan's 2021 F# Advent Submission![/] ");
+    AnsiConsole.MarkupLine("[underline green]Perf-Avore, The Rule Based Performance Analysis![/] ");
 
     let errorHandler      = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
     let parser            = ArgumentParser.Create<Arguments>(errorHandler = errorHandler)

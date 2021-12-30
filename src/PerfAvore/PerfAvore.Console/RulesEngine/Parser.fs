@@ -14,6 +14,11 @@ let parseCondition (conditionAsString : string) : Condition =
     // Condition Event and Property
     let parseConditioner : Conditioner = 
         let splitConditioner : string[] = splitCondition.[0].Split(".", StringSplitOptions.RemoveEmptyEntries)
+
+        // Precondition checks.
+        if splitConditioner.Length < 2 
+        then invalidArg (nameof conditionAsString) ("Incorrect format of the conditioner. Format is Event.Property.")
+
         let parseConditionEvent : ConditionerEvent = splitConditioner.[0]
         let parseConditionProperty : ConditionerProperty = splitConditioner.[1]
 
@@ -46,6 +51,9 @@ let parseCondition (conditionAsString : string) : Condition =
 
 let parseAction (actionAsAString : string) : Action = 
     let splitAction : string[] = actionAsAString.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+
+    if splitAction.Length < 2 
+    then invalidArg (nameof actionAsAString) ($"{actionAsAString} is an invalid Action.")
 
     // ActionOperator
     let parseActionOperator : ActionOperator = 
