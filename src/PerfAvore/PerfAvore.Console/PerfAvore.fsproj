@@ -6,6 +6,14 @@
     <PackAsTool>true</PackAsTool>
     <PackageVersion>1.0.1</PackageVersion>
     <ToolCommandName>perfavore</ToolCommandName>
+    <Owners>MokoSan</Owners>
+    <Authors>Mukund Raghav Sharma</Authors>
+    <RepositoryUrl>https://github.com/MokoSan</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/MokoSan/PerfAvore</PackageProjectUrl>
+    <PackageTags>Realtime FSharp Monitoring Analysis Performance</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Description>Rule based performance analysis and monitoring tool for dotnet written in F#.</Description>
   </PropertyGroup>
 
   <ItemGroup>
